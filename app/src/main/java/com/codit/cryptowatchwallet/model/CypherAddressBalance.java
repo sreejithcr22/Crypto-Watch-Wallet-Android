@@ -16,19 +16,19 @@ public class CypherAddressBalance implements BalanceInterface{
     private String address;
     @SerializedName("total_received")
     @Expose
-    private Long totalReceived;
+    private String totalReceived;
     @SerializedName("total_sent")
     @Expose
-    private Long totalSent;
+    private String totalSent;
     @SerializedName("balance")
     @Expose
-    private Long balance;
+    private String balance;
     @SerializedName("unconfirmed_balance")
     @Expose
-    private Long unconfirmedBalance;
+    private String unconfirmedBalance;
     @SerializedName("final_balance")
     @Expose
-    private Long finalBalance;
+    private String finalBalance;
     @SerializedName("n_tx")
     @Expose
     private Long nTx;
@@ -47,43 +47,43 @@ public class CypherAddressBalance implements BalanceInterface{
         this.address = address;
     }
 
-    public Long getTotalReceived() {
+    public String getTotalReceived() {
         return totalReceived;
     }
 
-    public void setTotalReceived(Long totalReceived) {
+    public void setTotalReceived(String totalReceived) {
         this.totalReceived = totalReceived;
     }
 
-    public Long getTotalSent() {
+    public String getTotalSent() {
         return totalSent;
     }
 
-    public void setTotalSent(Long totalSent) {
+    public void setTotalSent(String totalSent) {
         this.totalSent = totalSent;
     }
 
-    public Long getBalance() {
+    public String getBalance() {
         return balance;
     }
 
-    public void setBalance(Long balance) {
+    public void setBalance(String balance) {
         this.balance = balance;
     }
 
-    public Long getUnconfirmedBalance() {
+    public String getUnconfirmedBalance() {
         return unconfirmedBalance;
     }
 
-    public void setUnconfirmedBalance(Long unconfirmedBalance) {
+    public void setUnconfirmedBalance(String unconfirmedBalance) {
         this.unconfirmedBalance = unconfirmedBalance;
     }
 
-    public Long getFinalBalance() {
+    public String getFinalBalance() {
         return finalBalance;
     }
 
-    public void setFinalBalance(Long finalBalance) {
+    public void setFinalBalance(String finalBalance) {
         this.finalBalance = finalBalance;
     }
 
@@ -112,12 +112,12 @@ public class CypherAddressBalance implements BalanceInterface{
     }
 
     @Override
-    public Balance getWalletBalance() {
+    public Balance getWalletBalance(String coinCode) {
 
-        double coinBalance= Coin.convertToBase(getBalance());
-        double totalRecieved=Coin.convertToBase(getTotalReceived());
-        double totalSent=Coin.convertToBase(getTotalSent());
-        double unconfirmedBalance=Coin.convertToBase(getUnconfirmedBalance());
+        String coinBalance= Coin.convertToBase(getBalance(),coinCode);
+        String totalRecieved=Coin.convertToBase(getTotalReceived(),coinCode);
+        String totalSent=Coin.convertToBase(getTotalSent(),coinCode);
+        String unconfirmedBalance=Coin.convertToBase(getUnconfirmedBalance(),coinCode);
 
         return new Balance(coinBalance,totalRecieved,totalSent,unconfirmedBalance,getNTx(),getUnconfirmedNTx());
     }

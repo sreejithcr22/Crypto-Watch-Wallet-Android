@@ -60,7 +60,7 @@ public abstract class BaseService extends IntentService {
 
                 if(response.isSuccessful())
                 {
-                    return response.body().getWalletBalance();
+                    return response.body().getWalletBalance(coinCode);
                 }
                 else {
                     //check error
@@ -75,7 +75,7 @@ public abstract class BaseService extends IntentService {
 
                 if(response.isSuccessful())
                 {
-                    return response.body().getWalletBalance();
+                    return response.body().getWalletBalance(coinCode);
                 }
                 else {
                     //check error
@@ -88,6 +88,7 @@ public abstract class BaseService extends IntentService {
         }catch (IOException e) {
             //check error
             Log.d("wallet", "getBalanceFromServer: catch clause--"+e.getMessage());
+            if(e.getMessage().equals("timeout"))sendErrorBroadcast("Request timed out, please try again");
             e.printStackTrace();
             return null;
 

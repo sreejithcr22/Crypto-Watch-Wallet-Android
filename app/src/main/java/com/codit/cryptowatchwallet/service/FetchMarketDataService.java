@@ -79,7 +79,6 @@ public class FetchMarketDataService extends IntentService {
             coinPricesList.add(new CoinPrices(entry.getKey(),entry.getValue()));
 
         }
-
         MarketDao dao= AppDatabase.getDatabase(getApplicationContext()).marketDao();
         dao.addCoinPrices(coinPricesList);
 

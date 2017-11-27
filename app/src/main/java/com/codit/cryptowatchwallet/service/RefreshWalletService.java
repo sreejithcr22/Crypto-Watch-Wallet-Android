@@ -38,7 +38,7 @@ void refreshWallets()
     for (Wallet wallet:wallets)
     {
         Balance newBalance=getBalanceFromServer(wallet.getCoinCode(),wallet.getWalletAddress());
-        if(newBalance!=null&&!Balance.isEqual(wallet.getBalance(),newBalance))
+        if(newBalance!=null)
         {
             wallet.setBalance(newBalance);
             updated.add(wallet);}

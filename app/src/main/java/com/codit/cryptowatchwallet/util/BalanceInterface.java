@@ -8,5 +8,5 @@ import com.codit.cryptowatchwallet.model.Balance;
 
 public interface BalanceInterface {
 
-    public Balance getWalletBalance();
+    public Balance getWalletBalance(String coinCode);
 }

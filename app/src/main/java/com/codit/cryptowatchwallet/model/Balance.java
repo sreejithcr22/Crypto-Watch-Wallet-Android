@@ -8,35 +8,35 @@ import android.util.Log;
 
 public class Balance {
 
-    public double getCoinBalance() {
+    public String getCoinBalance() {
         return coinBalance;
     }
 
-    public void setCoinBalance(double coinBalance) {
+    public void setCoinBalance(String coinBalance) {
         this.coinBalance = coinBalance;
     }
 
-    public double getTotalReceived() {
+    public String getTotalReceived() {
         return totalReceived;
     }
 
-    public void setTotalReceived(double totalReceived) {
+    public void setTotalReceived(String totalReceived) {
         this.totalReceived = totalReceived;
     }
 
-    public double getTotalSent() {
+    public String getTotalSent() {
         return totalSent;
     }
 
-    public void setTotalSent(double totalSent) {
+    public void setTotalSent(String totalSent) {
         this.totalSent = totalSent;
     }
 
-    public double getUnconfirmedBalance() {
+    public String getUnconfirmedBalance() {
         return unconfirmedBalance;
     }
 
-    public void setUnconfirmedBalance(double unconfirmedBalance) {
+    public void setUnconfirmedBalance(String unconfirmedBalance) {
         this.unconfirmedBalance = unconfirmedBalance;
     }
 
@@ -48,7 +48,7 @@ public class Balance {
         this.transactionCount = transactionCount;
     }
 
-    public Balance( double coinBalance, double totalReceived, double totalSent, double unconfirmedBalance, long transactionCount,long unConfirmedTransactionCount) {
+    public Balance( String coinBalance, String totalReceived, String totalSent, String unconfirmedBalance, long transactionCount,long unConfirmedTransactionCount) {
 
         this.coinBalance = coinBalance;
         this.totalReceived = totalReceived;
@@ -64,7 +64,7 @@ public class Balance {
     }
 
 
-    double coinBalance,totalReceived,totalSent,unconfirmedBalance;
+    String coinBalance,totalReceived,totalSent,unconfirmedBalance;
     long transactionCount;
 
     public long getUnConfirmedTransactionCount() {

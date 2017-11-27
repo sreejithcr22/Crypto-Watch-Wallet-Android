@@ -17,28 +17,28 @@ public class BCHAddressBalance implements BalanceInterface{
     private String addrStr;
     @SerializedName("balance")
     @Expose
-    private Double balance;
+    private String balance;
     @SerializedName("balanceSat")
     @Expose
-    private Long balanceSat;
+    private String balanceSat;
     @SerializedName("totalReceived")
     @Expose
-    private Double totalReceived;
+    private String totalReceived;
     @SerializedName("totalReceivedSat")
     @Expose
-    private Long totalReceivedSat;
+    private String totalReceivedSat;
     @SerializedName("totalSent")
     @Expose
-    private double totalSent;
+    private String totalSent;
     @SerializedName("totalSentSat")
     @Expose
-    private Long totalSentSat;
+    private String totalSentSat;
     @SerializedName("unconfirmedBalance")
     @Expose
-    private double unconfirmedBalance;
+    private String unconfirmedBalance;
     @SerializedName("unconfirmedBalanceSat")
     @Expose
-    private Long unconfirmedBalanceSat;
+    private String unconfirmedBalanceSat;
     @SerializedName("unconfirmedTxApperances")
     @Expose
     private Long unconfirmedTxApperances;
@@ -57,67 +57,67 @@ public class BCHAddressBalance implements BalanceInterface{
         this.addrStr = addrStr;
     }
 
-    public Double getBalance() {
+    public String getBalance() {
         return balance;
     }
 
-    public void setBalance(Double balance) {
+    public void setBalance(String balance) {
         this.balance = balance;
     }
 
-    public Long getBalanceSat() {
+    public String getBalanceSat() {
         return balanceSat;
     }
 
-    public void setBalanceSat(Long balanceSat) {
+    public void setBalanceSat(String balanceSat) {
         this.balanceSat = balanceSat;
     }
 
-    public Double getTotalReceived() {
+    public String getTotalReceived() {
         return totalReceived;
     }
 
-    public void setTotalReceived(Double totalReceived) {
+    public void setTotalReceived(String totalReceived) {
         this.totalReceived = totalReceived;
     }
 
-    public Long getTotalReceivedSat() {
+    public String getTotalReceivedSat() {
         return totalReceivedSat;
     }
 
-    public void setTotalReceivedSat(Long totalReceivedSat) {
+    public void setTotalReceivedSat(String totalReceivedSat) {
         this.totalReceivedSat = totalReceivedSat;
     }
 
-    public double getTotalSent() {
+    public String getTotalSent() {
         return totalSent;
     }
 
-    public void setTotalSent(Long totalSent) {
+    public void setTotalSent(String totalSent) {
         this.totalSent = totalSent;
     }
 
-    public Long getTotalSentSat() {
+    public String getTotalSentSat() {
         return totalSentSat;
     }
 
-    public void setTotalSentSat(Long totalSentSat) {
+    public void setTotalSentSat(String totalSentSat) {
         this.totalSentSat = totalSentSat;
     }
 
-    public double getUnconfirmedBalance() {
+    public String getUnconfirmedBalance() {
         return unconfirmedBalance;
     }
 
-    public void setUnconfirmedBalance(Long unconfirmedBalance) {
+    public void setUnconfirmedBalance(String unconfirmedBalance) {
         this.unconfirmedBalance = unconfirmedBalance;
     }
 
-    public Long getUnconfirmedBalanceSat() {
+    public String getUnconfirmedBalanceSat() {
         return unconfirmedBalanceSat;
     }
 
-    public void setUnconfirmedBalanceSat(Long unconfirmedBalanceSat) {
+    public void setUnconfirmedBalanceSat(String unconfirmedBalanceSat) {
         this.unconfirmedBalanceSat = unconfirmedBalanceSat;
     }
 
@@ -147,9 +147,11 @@ public class BCHAddressBalance implements BalanceInterface{
 
 
     @Override
-    public Balance getWalletBalance() {
+    public Balance getWalletBalance(String coinCode) {
         return new Balance(getBalance(),getTotalReceived(),getTotalSent(),getUnconfirmedBalance(),getTxApperances(),getUnconfirmedTxApperances());
     }
+
+
 }
 
 

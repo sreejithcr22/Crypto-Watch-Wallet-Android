@@ -72,9 +72,9 @@ public class MainActivity extends AppCompatActivity {
                     mTextMessage.setText(R.string.title_notifications);
 
                    Intent intent=new Intent(MainActivity.this, AddWalletService.class);
-                   intent.putExtra(Wallet.WALLET_NAME,"my wallet");
+                   intent.putExtra(Wallet.WALLET_NAME,"zero btc1");
                    intent.putExtra(Wallet.WALLET_COIN_CODE,Coin.BTC);
-                   intent.putExtra(Wallet.WALLET_ADDRESS,"13RfiZiYPKryZ7Ej36zfkP3aCKbY3XLt73");
+                   intent.putExtra(Wallet.WALLET_ADDRESS,"1FK1rNLV69C85ut7XfQVsyVgVWoesQNN8f");
                    startService(intent);
 
                     Intent intent1=new Intent(MainActivity.this, AddWalletService.class);
@@ -84,9 +84,9 @@ public class MainActivity extends AppCompatActivity {
                     startService(intent1);
 
                     Intent intent2=new Intent(MainActivity.this, AddWalletService.class);
-                    intent2.putExtra(Wallet.WALLET_NAME,"random name");
+                    intent2.putExtra(Wallet.WALLET_NAME,"zero");
                     intent2.putExtra(Wallet.WALLET_COIN_CODE,Coin.ETH);
-                    intent2.putExtra(Wallet.WALLET_ADDRESS,"0x4Ed317Dc932C84563f2D53d502c833a9dbd281AC");
+                    intent2.putExtra(Wallet.WALLET_ADDRESS,"0x6C2adC2073994fb2CCC5032cC2906Fa221e9B391");
                     startService(intent2);
 
                     return true;
