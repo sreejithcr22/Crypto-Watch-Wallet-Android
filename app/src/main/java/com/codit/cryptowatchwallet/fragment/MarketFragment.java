@@ -67,9 +67,8 @@ public class MarketFragment extends Fragment  implements RecyclerviewSearchListe
 
 
         marketRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        marketRecyclerAdapter=new MarketRecyclerAdapter(coinPricesList);
+        marketRecyclerAdapter=new MarketRecyclerAdapter(coinPricesList,getContext());
         marketRecyclerView.setAdapter(marketRecyclerAdapter);
-
         swipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
@@ -119,6 +118,11 @@ public class MarketFragment extends Fragment  implements RecyclerviewSearchListe
     public void onSearch(String searchString) {
         marketRecyclerAdapter.getFilter().filter(searchString);
 
+    }
+
+    public void refreshList()
+    {
+        marketRecyclerAdapter.notifyDataSetChanged();
     }
 
 

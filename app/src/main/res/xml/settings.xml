@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="General">
+        <Preference
+            android:defaultValue="0"
+            android:key="default_currency"
+            android:title="Currency"
+
+            ></Preference>
+
+  <Preference android:title="Refresh Interval"
+        android:key="refresh_interval"
+        android:defaultValue="1"
+
+        ></Preference>
+
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

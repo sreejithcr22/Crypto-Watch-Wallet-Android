@@ -3,6 +3,7 @@ package com.codit.cryptowatchwallet.service;
 import android.app.IntentService;
 import android.arch.persistence.room.Update;
 import android.content.Intent;
+import android.util.Log;
 
 import com.codit.cryptowatchwallet.api.MarketApi;
 import com.codit.cryptowatchwallet.model.CoinPrices;
@@ -37,6 +38,7 @@ public class FetchMarketDataService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
+            Log.d("wallet", "fetch: ");
             updateDB(fetchDataFromServer());
 
             Intent intent1=new Intent(getApplicationContext(),RefreshWalletService.class);

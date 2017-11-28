@@ -10,5 +10,6 @@ public abstract class Currency {
     public static final String INR="INR";
     public static final String EUR="EUR";
     public static final String CAD="CAD";
+    public static final String[] currencyArray={USD,INR,EUR,CAD};
 
 }

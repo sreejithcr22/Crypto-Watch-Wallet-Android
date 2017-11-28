@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
+import com.codit.cryptowatchwallet.helper.PreferenceHelper;
 import com.codit.cryptowatchwallet.model.Balance;
 import com.codit.cryptowatchwallet.model.Wallet;
 import com.codit.cryptowatchwallet.util.Currency;
@@ -14,17 +15,17 @@ import java.util.List;
 
 public class RefreshWalletService extends BaseService {
 
+    PreferenceHelper helper;
     @Override
     protected void onHandleIntent(Intent intent) {
 
         if (intent != null)
         {
+            helper=new PreferenceHelper(this.getApplicationContext());
+            Log.d("wallet", "refresh: ");
             initializeDB();
             refreshWallets();
             updateWalletsWorth();
-
-
-
         }
     }
 
@@ -55,7 +56,7 @@ void refreshWallets()
 void updateWalletsWorth()
 {
     Intent intent1=new Intent(getApplicationContext(),UpdateWalletsWorthService.class);
-    intent1.putExtra(Currency.EXTRA_DATA_CURRENCY_CODE,Currency.USD);
+    intent1.putExtra(Currency.EXTRA_DATA_CURRENCY_CODE,Currency.currencyArray[helper.getDefaultCurrency()]);
     startService(intent1);
 }
 

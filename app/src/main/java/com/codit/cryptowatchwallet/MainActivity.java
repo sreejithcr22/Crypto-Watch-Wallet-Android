@@ -1,16 +1,23 @@
 package com.codit.cryptowatchwallet;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceFragment;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -19,28 +26,20 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.codit.cryptowatchwallet.api.MarketApi;
 import com.codit.cryptowatchwallet.fragment.MarketFragment;
+import com.codit.cryptowatchwallet.fragment.SettingsFragment;
 import com.codit.cryptowatchwallet.fragment.WalletFragment;
-import com.codit.cryptowatchwallet.model.Balance;
+import com.codit.cryptowatchwallet.helper.PreferenceHelper;
 import com.codit.cryptowatchwallet.model.Wallet;
-import com.codit.cryptowatchwallet.orm.AppDatabase;
-import com.codit.cryptowatchwallet.orm.WalletDao;
 import com.codit.cryptowatchwallet.service.AddWalletService;
 import com.codit.cryptowatchwallet.service.FetchMarketDataService;
-import com.codit.cryptowatchwallet.service.RefreshWalletService;
+import com.codit.cryptowatchwallet.service.UpdateWalletsWorthService;
 import com.codit.cryptowatchwallet.util.Coin;
+import com.codit.cryptowatchwallet.util.Currency;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SettingsFragment.onCurrencyPreferenceClickListener{
 
      static final String FRAGMENT_MARKET="market_fragment";
      static final String FRAGMENT_WALLET="wallet_fragment";
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private IntentIntegrator qrScan;
     MarketFragment marketFragment;
     WalletFragment walletFragment;
-
+    PreferenceHelper preferenceHelper;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -71,29 +70,38 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_notifications:
                     mTextMessage.setText(R.string.title_notifications);
 
-                   Intent intent=new Intent(MainActivity.this, AddWalletService.class);
+                   /*Intent intent=new Intent(MainActivity.this, AddWalletService.class);
                    intent.putExtra(Wallet.WALLET_NAME,"zero btc1");
-                   intent.putExtra(Wallet.WALLET_COIN_CODE,Coin.BTC);
+                   intent.putExtra(Wallet.WALLET_COIN_CODE, Coin.BTC);
                    intent.putExtra(Wallet.WALLET_ADDRESS,"1FK1rNLV69C85ut7XfQVsyVgVWoesQNN8f");
-                   startService(intent);
+                   startService(intent);*/
 
-                    Intent intent1=new Intent(MainActivity.this, AddWalletService.class);
+                  /*  Intent intent1=new Intent(MainActivity.this, AddWalletService.class);
                     intent1.putExtra(Wallet.WALLET_NAME,"shopping");
                     intent1.putExtra(Wallet.WALLET_COIN_CODE,Coin.BCH);
                     intent1.putExtra(Wallet.WALLET_ADDRESS,"17Wk4GPKw9nZ9PbspzaxN3fv1L2m9NA9dg");
-                    startService(intent1);
+                    startService(intent1);*/
 
-                    Intent intent2=new Intent(MainActivity.this, AddWalletService.class);
-                    intent2.putExtra(Wallet.WALLET_NAME,"zero");
+                 /*   Intent intent2=new Intent(MainActivity.this, AddWalletService.class);
+                    intent2.putExtra(Wallet.WALLET_NAME,"large");
                     intent2.putExtra(Wallet.WALLET_COIN_CODE,Coin.ETH);
-                    intent2.putExtra(Wallet.WALLET_ADDRESS,"0x6C2adC2073994fb2CCC5032cC2906Fa221e9B391");
-                    startService(intent2);
+                    intent2.putExtra(Wallet.WALLET_ADDRESS,"0x281055Afc982d96fAB65b3a49cAc8b878184Cb16");
+                    startService(intent2);*/
+                   getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new SettingsFragment()).commit();
 
                     return true;
             }
             return false;
         }
     };
+
+    void setUpAlarm()
+    {
+        Intent intent = new Intent(this, FetchMarketDataService.class);
+        PendingIntent pintent = PendingIntent.getService(this, 0, intent, 0);
+        AlarmManager alarm = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 30*1000, pintent);
+    }
 
 
     @Override
@@ -102,6 +110,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
+        //setUpAlarm();
+        preferenceHelper=new PreferenceHelper(getApplicationContext());
 
         mTextMessage = findViewById(R.id.message);
         BottomNavigationView navigation = findViewById(R.id.navigation);
@@ -126,12 +136,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId())
+        {
+            case R.id.change_currency:showChangeCurrencyDialog();return true;
+        }
+
+        return false;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+
 
         SearchView searchView= (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -203,5 +219,32 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(addWalletErrorReciever);
+    }
+
+    void showChangeCurrencyDialog()
+    {
+        final AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Change currency")
+                .setSingleChoiceItems(Currency.currencyArray, preferenceHelper.getDefaultCurrency(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        preferenceHelper.setDefaultCurrency(i);
+                        dialogInterface.dismiss();
+                        Intent intent=new Intent(MainActivity.this, UpdateWalletsWorthService.class);
+                        intent.putExtra(Currency.EXTRA_DATA_CURRENCY_CODE, Currency.currencyArray[i]);
+                        startService(intent);
+                        marketFragment= (MarketFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_MARKET);
+                        if(marketFragment!=null&&marketFragment.isVisible()) {
+                            marketFragment.refreshList();
+                        }
+                    }
+                });
+        builder.setNegativeButton("Cancel",null)
+                .create().show();
+    }
+
+    @Override
+    public void onCurrencyPreferenceClick() {
+        showChangeCurrencyDialog();
     }
 }

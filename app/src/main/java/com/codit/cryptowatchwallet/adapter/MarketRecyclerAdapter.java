@@ -11,6 +11,7 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.codit.cryptowatchwallet.R;
+import com.codit.cryptowatchwallet.helper.PreferenceHelper;
 import com.codit.cryptowatchwallet.model.CoinPrices;
 import com.codit.cryptowatchwallet.util.Currency;
 
@@ -27,11 +28,13 @@ public class MarketRecyclerAdapter extends RecyclerView.Adapter<MarketRecyclerAd
     List<CoinPrices> coinPricesList=new ArrayList<>();
     List<CoinPrices> coinPricesListCopy=new ArrayList<>();
     static final String TAG="recyclerview";
+    PreferenceHelper preferenceHelper;
 
 
-    public MarketRecyclerAdapter(List<CoinPrices> coinPricesList) {
+    public MarketRecyclerAdapter(List<CoinPrices> coinPricesList,Context context) {
         this.coinPricesList = coinPricesList;
         this.coinPricesListCopy=coinPricesList;
+        preferenceHelper=new PreferenceHelper(context.getApplicationContext());
 
         Log.d("search", "constructor: ");
     }
@@ -50,7 +53,7 @@ public class MarketRecyclerAdapter extends RecyclerView.Adapter<MarketRecyclerAd
 
         Log.d(TAG, "onBindViewHolder: "+String.valueOf(position));
         holder.coinCode.setText(coinPricesList.get(position).getCoinCode());
-        holder.coinPrice.setText(String.valueOf(coinPricesList.get(position).getPrices().get(Currency.USD)));
+        holder.coinPrice.setText(Currency.currencyArray[preferenceHelper.getDefaultCurrency()]+" "+String.valueOf(coinPricesList.get(position).getPrices().get(Currency.currencyArray[preferenceHelper.getDefaultCurrency()])));
 
     }
 

@@ -16,7 +16,7 @@ public class UpdateWalletsWorthService extends BaseService {
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
-
+            Log.d("wallet", "updateworth: ");
             initializeDB();
             String currencyCode=intent.getStringExtra(Currency.EXTRA_DATA_CURRENCY_CODE);
             if(currencyCode!=null)
