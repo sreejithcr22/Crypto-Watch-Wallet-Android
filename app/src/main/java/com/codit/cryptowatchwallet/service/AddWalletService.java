@@ -50,14 +50,22 @@ public class AddWalletService extends BaseService {
                 //calculate coin worth
                 //get coin price in default currency
 
-                String coinWorth=Coin.calculateCoinWorth(balance.getCoinBalance(),getCoinRateFromDB(walletCoinCode,Currency.USD),Currency.USD);
-                addWalletToDB(new Wallet(walletName,walletCoinCode,walletAddress,balance,coinWorth));
+              try{
+
+                  String coinWorth=Coin.calculateCoinWorth(balance.getCoinBalance(),getCoinRateFromDB(walletCoinCode,Currency.USD),Currency.USD);
+                  addWalletToDB(new Wallet(walletName,walletCoinCode,walletAddress,balance,coinWorth));
+                  reportStatus(SUCCESS_WALLET_ADDED,false);
+
+              }catch (Exception e){reportStatus(ERROR_UNKNOWN,true);}
+
+
 
 
             }
             else {
                 //broadcast error to main activity
-                Log.d("wallet", "onHandleIntent: balance null");
+                reportStatus(ERROR_UNKNOWN,true);
+
             }
 
 
@@ -73,7 +81,7 @@ public class AddWalletService extends BaseService {
 
         }catch (Exception e)
         {
-            sendErrorBroadcast("Wallet could not be added");
+            reportStatus(ERROR_UNKNOWN,true);
         }
     }
 
@@ -84,13 +92,13 @@ public class AddWalletService extends BaseService {
         if(object!=null)
         {
             //send error broadcast to activity
-            sendErrorBroadcast("Wallet name already exists");
+            reportStatus(ERRROR_DUPLICATE_WALLET,true);
             return true;
         }
         Wallet object2=walletDao.checkIfAddressDuplicate(walletAddress);
         if(object2!=null)
         {
-            sendErrorBroadcast("Address already exists with wallet: "+object2.getDisplayName());
+            reportStatus("Address already exists with wallet: "+object2.getDisplayName(),true);
             return true;
         }
 

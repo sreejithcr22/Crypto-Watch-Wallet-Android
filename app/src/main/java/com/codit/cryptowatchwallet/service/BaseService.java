@@ -26,10 +26,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public abstract class BaseService extends IntentService {
 
-    public static final String ACTION_REPORT_ERROR="report_error";
-    public static final String ERROR_DATA="error_data";
+    public static final String REPORT_STATUS="report_status";
+    public static final String REPORT_DATA="report_data";
     public static final String ERROR_MESSAGE_BAD_REQUEST="Invalid address";
     public static final String ERROR_MESSAGE_NO_INTERNET="No internet connection";
+    public static final String ERROR_REQUEST_TIME_OUT="Request timed out, please try again";
+    public static final String ERROR_UNKNOWN="Sorry, something went wrong";
+    public static final String SUCCESS_WALLET_ADDED="Wallet added successfully";
+    public static final String ERRROR_DUPLICATE_WALLET="Wallet name already exists";
+    public static final String IS_ERROR="is-error";
 
     public   MarketDao marketDao;
     public   WalletDao walletDao;
@@ -53,7 +58,7 @@ public abstract class BaseService extends IntentService {
 
         try {
 
-            if (coinCode.equals(Coin.BTC) || coinCode.equals(Coin.ETH)) {
+            if (coinCode.equals(Coin.BTC) || coinCode.equals(Coin.ETH) || coinCode.equals(Coin.LTC) || coinCode.equals(Coin.DASH) || coinCode.equalsIgnoreCase(Coin.DOGE)) {
 
                 Response<CypherAddressBalance> response=walletApi.getCypherAddressBalance("https://api.blockcypher.com/v1/"+coinCode.toLowerCase()+"/main/addrs/"+address+"/balance").execute();
 
@@ -64,6 +69,7 @@ public abstract class BaseService extends IntentService {
                 }
                 else {
                     //check error
+                    reportStatus(ERROR_MESSAGE_BAD_REQUEST,true);
                     Log.d("wallet", "getBalanceFromServer: message="+response.message()+", code-"+response.code()+" errorbody="+response.errorBody().string());
                     return null;
                 }
@@ -79,6 +85,7 @@ public abstract class BaseService extends IntentService {
                 }
                 else {
                     //check error
+                    reportStatus(ERROR_MESSAGE_BAD_REQUEST,true);
                     Log.d("wallet", "getBalanceFromServer: message="+response.message()+", code-"+response.code()+" errorbody="+response.errorBody().string());
                     return null;
                 }
@@ -87,15 +94,16 @@ public abstract class BaseService extends IntentService {
 
         }catch (IOException e) {
             //check error
-            Log.d("wallet", "getBalanceFromServer: catch clause--"+e.getMessage());
-            if(e.getMessage().equals("timeout"))sendErrorBroadcast("Request timed out, please try again");
+            Log.d("wallet", "getBalanceFromServer: catch clause1--"+e.getMessage());
+            if(e.getMessage().equals("timeout"))reportStatus(ERROR_REQUEST_TIME_OUT,true);
             e.printStackTrace();
             return null;
 
         }
         catch (Exception e)
         {
-            Log.d("wallet", "getBalanceFromServer: catch clause exception"+e.getMessage());
+
+            Log.d("wallet", "getBalanceFromServer: catch clause2 --"+e.getMessage());
 
             return null;
         }
@@ -135,10 +143,11 @@ public abstract class BaseService extends IntentService {
 
     }
 
-    void sendErrorBroadcast(String errorMessage)
+    void reportStatus(String message,boolean isError)
     {
-        Intent intent=new Intent(ACTION_REPORT_ERROR);
-        intent.putExtra(ERROR_DATA,errorMessage);
+        Intent intent=new Intent(REPORT_STATUS);
+        intent.putExtra(REPORT_DATA,message);
+        intent.putExtra(IS_ERROR,isError);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 

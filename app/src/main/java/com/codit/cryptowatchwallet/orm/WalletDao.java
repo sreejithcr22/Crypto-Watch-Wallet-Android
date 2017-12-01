@@ -27,7 +27,7 @@ public interface WalletDao {
     @Insert
     void addNewWallet(Wallet wallets);
 
-    @Query("Select * from Wallet where displayName=:displayName")
+    @Query("Select * from Wallet where displayName=:displayName COLLATE NOCASE")
     Wallet checkIfNameDuplicate(String displayName);
 
     @Query("Select * from Wallet where walletAddress=:walletAddress")

@@ -1,4 +1,4 @@
-package com.codit.cryptowatchwallet;
+package com.codit.cryptowatchwallet.activity;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -7,17 +7,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -26,6 +22,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.codit.cryptowatchwallet.R;
 import com.codit.cryptowatchwallet.fragment.MarketFragment;
 import com.codit.cryptowatchwallet.fragment.SettingsFragment;
 import com.codit.cryptowatchwallet.fragment.WalletFragment;
@@ -44,11 +41,11 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
      static final String FRAGMENT_MARKET="market_fragment";
      static final String FRAGMENT_WALLET="wallet_fragment";
     private Toolbar toolbar;
-    private TextView mTextMessage;
-    private IntentIntegrator qrScan;
+
     MarketFragment marketFragment;
     WalletFragment walletFragment;
     PreferenceHelper preferenceHelper;
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -57,18 +54,15 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
 
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new WalletFragment(),FRAGMENT_WALLET).commit();
                     return true;
                 case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
-                   // qrScan.initiateScan();
+                   //
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new MarketFragment(),FRAGMENT_MARKET).commit();
 
                     return true;
                 case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
 
                    /*Intent intent=new Intent(MainActivity.this, AddWalletService.class);
                    intent.putExtra(Wallet.WALLET_NAME,"zero btc1");
@@ -82,11 +76,11 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
                     intent1.putExtra(Wallet.WALLET_ADDRESS,"17Wk4GPKw9nZ9PbspzaxN3fv1L2m9NA9dg");
                     startService(intent1);*/
 
-                 /*   Intent intent2=new Intent(MainActivity.this, AddWalletService.class);
+                   Intent intent2=new Intent(MainActivity.this, AddWalletService.class);
                     intent2.putExtra(Wallet.WALLET_NAME,"large");
                     intent2.putExtra(Wallet.WALLET_COIN_CODE,Coin.ETH);
                     intent2.putExtra(Wallet.WALLET_ADDRESS,"0x281055Afc982d96fAB65b3a49cAc8b878184Cb16");
-                    startService(intent2);*/
+                    startService(intent2);
                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new SettingsFragment()).commit();
 
                     return true;
@@ -113,7 +107,6 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
         //setUpAlarm();
         preferenceHelper=new PreferenceHelper(getApplicationContext());
 
-        mTextMessage = findViewById(R.id.message);
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         toolbar=findViewById(R.id.toolbar);
@@ -122,9 +115,7 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
 
 
 
-        qrScan = new IntentIntegrator(this);
-        qrScan.setPrompt("Scan public address")
-                .setOrientationLocked(false);
+
 
 
 
@@ -180,46 +171,10 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
         return true;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
 
-        if (result != null) {
-            if (result.getContents() == null) {
-                Toast.makeText(this, "Scan failed, Please retry !", Toast.LENGTH_LONG).show();
-            } else {
-                mTextMessage.setText( result.getContents());
 
-                }
 
-            }
-        else {
-            Toast.makeText(this, "Scanning failed, Please retry !", Toast.LENGTH_LONG).show();
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
 
-    BroadcastReceiver addWalletErrorReciever =new  BroadcastReceiver()
-    {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            Log.d("wallet", "onReceive: "+intent.getStringExtra(AddWalletService.ERROR_DATA));
-            Toast.makeText(context,intent.getStringExtra(AddWalletService.ERROR_DATA),Toast.LENGTH_SHORT).show();
-        }
-    };
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(addWalletErrorReciever,new IntentFilter(AddWalletService.ACTION_REPORT_ERROR));
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(addWalletErrorReciever);
-    }
 
     void showChangeCurrencyDialog()
     {

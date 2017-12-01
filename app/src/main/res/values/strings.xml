@@ -6,4 +6,22 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <!--add wallet spinner items array!-->
+    <string-array name="add_wallet_spinner_items">
+        <item>Bitcoin (BTC)</item>
+        <item>Ether (ETH)</item>
+        <item>BitCoin Cash (BCH)</item>
+        <item>Litecoin (LTC)</item>
+        <item>Ripple (XRP)</item>
+        <item>DigitalCash (DASH)</item>
+        <item>Dogecoin (DOGE)</item>
+        <item>Zcash (ZEC)</item>
+        <item>NEO (NEO)</item>
+
+
+
+    </string-array>
+
 </resources>

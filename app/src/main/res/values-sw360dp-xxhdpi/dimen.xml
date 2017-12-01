@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="fab_margin">28dp</dimen>
+
+
+    <!--add wallet activity!-->
+    <dimen name="add_wallet_activity_parent_padding">15dp</dimen>
+    <dimen name="add_wallet_activity_name_edittext_margin_top">16dp</dimen>
+    <dimen name="add_wallet_activity_address_edittext_margin_top">20dp</dimen>
+    <dimen name="add_wallet_address_button_layout_margin_top">20dp</dimen>
+    <dimen name="add_wallet_address_buttons_margin">4dp</dimen>
+
+</resources>

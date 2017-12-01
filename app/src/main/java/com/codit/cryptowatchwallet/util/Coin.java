@@ -12,9 +12,12 @@ public class Coin {
     private static final double SATOSHI=Math.pow(10,8);
     private static final double WEI=Math.pow(10,18);
     public static final String BTC="BTC";
-    public static final String BCC="BCC";
     public static final String ETH="ETH";
     public static final String BCH="BCH";
+    public static final String DASH="DASH";
+    public static final String LTC="LTC";
+    public static final String DOGE="DOGE";
+
 
 
     public static String convertToBase(String units,String coinCode)
@@ -25,6 +28,11 @@ public class Coin {
             case BTC:smallestUnit=SATOSHI;break;
             case BCH:smallestUnit=SATOSHI;break;
             case ETH:smallestUnit=WEI;break;
+            case DASH:smallestUnit=SATOSHI;break;
+            case LTC:smallestUnit=SATOSHI;break;
+            case DOGE:smallestUnit=SATOSHI;break;
+
+
             default:smallestUnit=0;
 
 

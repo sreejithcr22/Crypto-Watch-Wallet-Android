@@ -1,5 +1,7 @@
 package com.codit.cryptowatchwallet.model;
 
+import android.util.Log;
+
 import com.codit.cryptowatchwallet.util.BalanceInterface;
 import com.codit.cryptowatchwallet.util.Coin;
 import com.google.gson.annotations.Expose;
@@ -118,6 +120,7 @@ public class CypherAddressBalance implements BalanceInterface{
         String totalRecieved=Coin.convertToBase(getTotalReceived(),coinCode);
         String totalSent=Coin.convertToBase(getTotalSent(),coinCode);
         String unconfirmedBalance=Coin.convertToBase(getUnconfirmedBalance(),coinCode);
+
 
         return new Balance(coinBalance,totalRecieved,totalSent,unconfirmedBalance,getNTx(),getUnconfirmedNTx());
     }

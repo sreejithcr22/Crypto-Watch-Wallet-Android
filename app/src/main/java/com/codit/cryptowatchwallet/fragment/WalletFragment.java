@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codit.cryptowatchwallet.R;
+import com.codit.cryptowatchwallet.activity.AddWalletActivity;
 import com.codit.cryptowatchwallet.adapter.WalletRecyclerAdappter;
 import com.codit.cryptowatchwallet.model.Wallet;
 import com.codit.cryptowatchwallet.service.FetchMarketDataService;
@@ -30,7 +32,8 @@ public class WalletFragment extends Fragment implements RecyclerviewSearchListen
     RecyclerView walletRecyclerview;
     WalletRecyclerAdappter walletRecyclerAdappter;
     List<Wallet>walletList=new ArrayList<>();
-    SwipeRefreshLayout swipeRefreshLayout;
+    FloatingActionButton fab;
+
 
     public WalletFragment() {
         // Required empty public constructor
@@ -43,7 +46,14 @@ public class WalletFragment extends Fragment implements RecyclerviewSearchListen
         // Inflate the layout for this fragment
         View rootView= inflater.inflate(R.layout.fragment_wallet, container, false);
         walletRecyclerview=rootView.findViewById(R.id.wallet_recyclerview);
-        swipeRefreshLayout=rootView.findViewById(R.id.swiperefresh_wallet_fragment);
+        fab=rootView.findViewById(R.id.add_wallet_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(getContext(), AddWalletActivity.class);
+                startActivity(intent);
+            }
+        });
         return rootView;
     }
 
@@ -55,22 +65,11 @@ public class WalletFragment extends Fragment implements RecyclerviewSearchListen
          walletRecyclerAdappter=new WalletRecyclerAdappter(walletList);
         walletRecyclerview.setAdapter(walletRecyclerAdappter);
 
-        swipeRefreshLayout.setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-
-                        getContext().startService(new Intent(getContext(), FetchMarketDataService.class));
-                    }
-                }
-        );
-
         WalletViewModel walletViewModel= ViewModelProviders.of(this).get(WalletViewModel.class);
         walletViewModel.getAllWalletsLive().observe(WalletFragment.this, new Observer<List<Wallet>>() {
             @Override
             public void onChanged(@Nullable List<Wallet> wallets) {
 
-                swipeRefreshLayout.setRefreshing(false);
                 walletRecyclerAdappter.updateData(wallets);
             }
         });
