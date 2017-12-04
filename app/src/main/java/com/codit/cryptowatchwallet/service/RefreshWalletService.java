@@ -36,18 +36,28 @@ void refreshWallets()
     List<Wallet>updated=new ArrayList<>();
     if(wallets==null)return;
 
+
     for (Wallet wallet:wallets)
     {
         Balance newBalance=getBalanceFromServer(wallet.getCoinCode(),wallet.getWalletAddress());
         if(newBalance!=null)
         {
+            Log.d("wallet", "refreshWallets: got balance");
+            Balance.isEqual(wallet.getBalance(),newBalance,wallet.getDisplayName(),wallet.getCoinCode(),this);
             wallet.setBalance(newBalance);
-            updated.add(wallet);}
+            updated.add(wallet);
+        }
+
+        //delay the api call so that the ip address is not banned by api provider
+        try {Log.d("wallet", "refreshWallets: before sleep");
+
+            Thread.sleep(3000);
+            Log.d("wallet", "refreshWallets: after sleep");
+        } catch (InterruptedException e) {}
     }
-    if (updated.size()!=0) {
+    if (updated.size()!=0)
+    {
         updateWalletsDB(updated);
-
-
     }
     else Log.d("wallet", "refreshWallets: no update available");
 

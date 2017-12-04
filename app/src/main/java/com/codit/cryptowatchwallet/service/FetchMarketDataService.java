@@ -40,11 +40,15 @@ public class FetchMarketDataService extends IntentService {
         if (intent != null) {
             Log.d("wallet", "fetch: ");
             updateDB(fetchDataFromServer());
+            if(intent.getBooleanExtra(BaseService.FLAG_REFRESH_WALLET,false))
+            {
+                startService(new Intent(this,RefreshWalletService.class));
+            }
+            else
+            {
+                Log.d("wallet", "fetch false: ");
+            }
 
-            Intent intent1=new Intent(getApplicationContext(),RefreshWalletService.class);
-            //get def currency from preference
-            //intent1.putExtra(Currency.EXTRA_DATA_CURRENCY_CODE,Currency.USD);
-            startService(intent1);
         }
     }
 

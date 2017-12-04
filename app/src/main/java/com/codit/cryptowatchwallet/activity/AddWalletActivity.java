@@ -228,21 +228,25 @@ public class AddWalletActivity extends AppCompatActivity {
             Log.d("wallet", "onReceive: "+intent.getStringExtra(AddWalletService.REPORT_DATA));
             if (dialog.isShowing())dialog.cancel();
 
-            showReport(intent.getStringExtra(BaseService.REPORT_DATA),intent.getBooleanExtra(BaseService.IS_ERROR,false));
+            showReport(intent.getStringExtra(BaseService.REPORT_DATA),intent.getStringExtra(BaseService.REPORT_TYPE));
         }
     };
 
-    void showReport(String message,boolean isError)
+    void showReport(String message,String reportType)
     {
+
         String title;
-        if(!isError)title="Success";
-        else title="Failure";
+        if(reportType.equalsIgnoreCase(BaseService.REPORT_TYPE_WARNING))
+        {
+            Toast.makeText(this,message,Toast.LENGTH_LONG).show();
+            return;
+        }
 
         AlertDialog.Builder builder=new AlertDialog.Builder(AddWalletActivity.this);
-        builder.setTitle(title)
-                .setMessage(message);
-        if(!isError)
+
+        if(reportType.equals(BaseService.REPOT_TYPE_SUCCESS))
         {
+            title="Success";
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -252,8 +256,11 @@ public class AddWalletActivity extends AppCompatActivity {
         }
         else {
             builder.setPositiveButton("OK",null);
+            title="Failure";
         }
-        builder.create().show();
+        builder.setTitle(title)
+                .setMessage(message).create().show();
+
 
     }
 

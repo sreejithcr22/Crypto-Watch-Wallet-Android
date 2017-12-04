@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.Context;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.codit.cryptowatchwallet.api.WalletApi;
 import com.codit.cryptowatchwallet.model.BCHAddressBalance;
@@ -35,6 +36,11 @@ public abstract class BaseService extends IntentService {
     public static final String SUCCESS_WALLET_ADDED="Wallet added successfully";
     public static final String ERRROR_DUPLICATE_WALLET="Wallet name already exists";
     public static final String IS_ERROR="is-error";
+    public static final String REPORT_TYPE="report_type";
+    public static final String REPOT_TYPE_SUCCESS="report_success";
+    public static final String REPOT_TYPE_FAILURE="report_failure";
+    public static final String REPORT_TYPE_WARNING="report_warning";
+    public static final String FLAG_REFRESH_WALLET="flag_refresh_wallet";
 
     public   MarketDao marketDao;
     public   WalletDao walletDao;
@@ -69,7 +75,7 @@ public abstract class BaseService extends IntentService {
                 }
                 else {
                     //check error
-                    reportStatus(ERROR_MESSAGE_BAD_REQUEST,true);
+                    reportStatus(ERROR_MESSAGE_BAD_REQUEST,REPOT_TYPE_FAILURE);
                     Log.d("wallet", "getBalanceFromServer: message="+response.message()+", code-"+response.code()+" errorbody="+response.errorBody().string());
                     return null;
                 }
@@ -85,7 +91,7 @@ public abstract class BaseService extends IntentService {
                 }
                 else {
                     //check error
-                    reportStatus(ERROR_MESSAGE_BAD_REQUEST,true);
+                    reportStatus(ERROR_MESSAGE_BAD_REQUEST,REPOT_TYPE_FAILURE);
                     Log.d("wallet", "getBalanceFromServer: message="+response.message()+", code-"+response.code()+" errorbody="+response.errorBody().string());
                     return null;
                 }
@@ -95,7 +101,7 @@ public abstract class BaseService extends IntentService {
         }catch (IOException e) {
             //check error
             Log.d("wallet", "getBalanceFromServer: catch clause1--"+e.getMessage());
-            if(e.getMessage().equals("timeout"))reportStatus(ERROR_REQUEST_TIME_OUT,true);
+            if(e.getMessage().equals("timeout"))reportStatus(ERROR_REQUEST_TIME_OUT,REPOT_TYPE_FAILURE);
             e.printStackTrace();
             return null;
 
@@ -124,7 +130,7 @@ public abstract class BaseService extends IntentService {
 
     }
 
-    int updateWalletsDB(List<Wallet>wallets)
+    synchronized int updateWalletsDB(List<Wallet>wallets)
     {
         try {
             int rows= walletDao.updateWallets(wallets);
@@ -139,15 +145,24 @@ public abstract class BaseService extends IntentService {
 
     double getCoinRateFromDB(String coinCode,String currency)
     {
-        return marketDao.getCoinPricesFor(coinCode).getPrices().get(currency);
+        try{
+            return marketDao.getCoinPricesFor(coinCode).getPrices().get(currency);
+        }
+        catch (NullPointerException e)
+        {
+            reportStatus("Cannot calculate wallet value since market data is not available, please refresh 'Marlet' tab to fetch coin prices.",REPORT_TYPE_WARNING);
+            return 0;
+        }
+
+
 
     }
 
-    void reportStatus(String message,boolean isError)
+    void reportStatus(String message,String reportType)
     {
         Intent intent=new Intent(REPORT_STATUS);
         intent.putExtra(REPORT_DATA,message);
-        intent.putExtra(IS_ERROR,isError);
+        intent.putExtra(REPORT_TYPE,reportType);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 

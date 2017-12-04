@@ -30,6 +30,8 @@ import com.codit.cryptowatchwallet.helper.PreferenceHelper;
 import com.codit.cryptowatchwallet.model.Wallet;
 import com.codit.cryptowatchwallet.service.AddWalletService;
 import com.codit.cryptowatchwallet.service.FetchMarketDataService;
+import com.codit.cryptowatchwallet.service.NotificationService;
+import com.codit.cryptowatchwallet.service.RefreshWalletService;
 import com.codit.cryptowatchwallet.service.UpdateWalletsWorthService;
 import com.codit.cryptowatchwallet.util.Coin;
 import com.codit.cryptowatchwallet.util.Currency;
@@ -91,10 +93,10 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
 
     void setUpAlarm()
     {
-        Intent intent = new Intent(this, FetchMarketDataService.class);
-        PendingIntent pintent = PendingIntent.getService(this, 0, intent, 0);
+        Intent intent = new Intent(this, RefreshWalletService.class);
+        PendingIntent pintent = PendingIntent.getService(getBaseContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarm = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 30*1000, pintent);
+        alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 5*60*1000, pintent);
     }
 
 
@@ -104,8 +106,10 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
         setContentView(R.layout.activity_main);
 
 
-        //setUpAlarm();
         preferenceHelper=new PreferenceHelper(getApplicationContext());
+        //check session count and do initial app setup
+        initSession();
+
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -133,6 +137,21 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
         }
 
         return false;
+    }
+
+    void initSession()
+    {
+        if(preferenceHelper.getSessionCount()==0)
+        {
+            setUpAlarm();
+        }
+        if(!PreferenceHelper.SESSION_COUNT_UPDATED)
+        {
+            preferenceHelper.setSessionCount(preferenceHelper.getSessionCount()+1);
+            PreferenceHelper.SESSION_COUNT_UPDATED=true;
+            startService(new Intent(this,FetchMarketDataService.class));
+        }
+        Log.d("session", "count="+preferenceHelper.getSessionCount());
     }
 
     @Override

@@ -39,7 +39,11 @@
             android:name=".service.RefreshWalletService"
             android:exported="false" />
 
-        <activity android:name=".activity.AddWalletActivity"></activity>
+        <activity android:name=".activity.AddWalletActivity" />
+
+        <service
+            android:name=".service.NotificationService"
+            android:exported="false"></service>
     </application>
 
 </manifest>
