@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.codit.cryptowatchwallet.R;
 import com.codit.cryptowatchwallet.helper.PreferenceHelper;
 import com.codit.cryptowatchwallet.model.CoinPrices;
+import com.codit.cryptowatchwallet.util.Coin;
 import com.codit.cryptowatchwallet.util.Currency;
 
 import java.util.ArrayList;
@@ -51,8 +52,9 @@ public class MarketRecyclerAdapter extends RecyclerView.Adapter<MarketRecyclerAd
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
+        String coinCode=coinPricesList.get(position).getCoinCode();
         Log.d(TAG, "onBindViewHolder: "+String.valueOf(position));
-        holder.coinCode.setText(coinPricesList.get(position).getCoinCode());
+        holder.coinCode.setText(Coin.getCoinName(coinCode)+" ("+coinCode+")");
         holder.coinPrice.setText(Currency.currencyArray[preferenceHelper.getDefaultCurrency()]+" "+String.valueOf(coinPricesList.get(position).getPrices().get(Currency.currencyArray[preferenceHelper.getDefaultCurrency()])));
 
     }

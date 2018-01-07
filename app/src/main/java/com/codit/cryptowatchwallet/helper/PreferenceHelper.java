@@ -14,6 +14,7 @@ public class PreferenceHelper {
     public static final String REFRESH_INTERVAL="refresh_interval";
     public static final String SESSION_COUNT="session_count";
     public static boolean SESSION_COUNT_UPDATED=false;
+    public  static final String NOTIFICATION_ID="nitif_id";
     SharedPreferences preferenceManager;
 
     public PreferenceHelper(Context context)
@@ -25,5 +26,11 @@ public class PreferenceHelper {
     public int getDefaultCurrency(){return preferenceManager.getInt(DEFAULT_CURRENCY,0);}
     public void setSessionCount(int sessionCount){preferenceManager.edit().putInt(SESSION_COUNT,sessionCount).apply();}
     public int getSessionCount(){return preferenceManager.getInt(SESSION_COUNT,0);}
+    public int getNotificationID() {return preferenceManager.getInt(NOTIFICATION_ID,1);}
+    public int generateNotificationID()
+    {
+        preferenceManager.edit().putInt(NOTIFICATION_ID,getNotificationID()+1).commit();
+        return getNotificationID();
+    }
 
 }

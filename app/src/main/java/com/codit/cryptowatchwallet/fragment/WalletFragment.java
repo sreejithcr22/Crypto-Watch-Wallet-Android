@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -61,9 +62,15 @@ public class WalletFragment extends Fragment implements RecyclerviewSearchListen
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        walletRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
-         walletRecyclerAdappter=new WalletRecyclerAdappter(walletList);
+        LinearLayoutManager layoutManager=new LinearLayoutManager(getContext());
+        walletRecyclerview.setLayoutManager(layoutManager);
+         walletRecyclerAdappter=new WalletRecyclerAdappter(getContext(),walletList);
         walletRecyclerview.setAdapter(walletRecyclerAdappter);
+        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(
+                walletRecyclerview.getContext(),
+                layoutManager.getOrientation()
+        );
+        walletRecyclerview.addItemDecoration(mDividerItemDecoration);
 
         WalletViewModel walletViewModel= ViewModelProviders.of(this).get(WalletViewModel.class);
         walletViewModel.getAllWalletsLive().observe(WalletFragment.this, new Observer<List<Wallet>>() {

@@ -2,6 +2,7 @@ package com.codit.cryptowatchwallet.orm;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
@@ -35,5 +36,8 @@ public interface WalletDao {
 
     @Update
     int updateWallets(List<Wallet> wallets);
+
+    @Delete
+    int deleteWallet(Wallet wallet);
 
 }

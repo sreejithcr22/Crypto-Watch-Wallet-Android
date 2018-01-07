@@ -5,6 +5,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import java.math.BigDecimal;
@@ -13,7 +15,7 @@ import java.math.BigDecimal;
  * Created by Sreejith on 24-Nov-17.
  */
 @Entity(indices={@Index(value="walletAddress", unique=true)})
-public class Wallet {
+public class Wallet implements Parcelable {
 
     @Ignore
     public static final String WALLET_NAME="wallet_name";
@@ -21,6 +23,8 @@ public class Wallet {
     public static final String WALLET_ADDRESS="wallet_address";
     @Ignore
     public static final String WALLET_COIN_CODE="wallet_coin_code";
+    @Ignore
+    public static final String EXTRA_WALLET_OBJECT="wallet_object";
 
     public Wallet()
     {
@@ -86,4 +90,37 @@ public class Wallet {
 
     String coinWorth;
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.displayName);
+        dest.writeString(this.coinCode);
+        dest.writeString(this.walletAddress);
+        dest.writeParcelable(this.balance, flags);
+        dest.writeString(this.coinWorth);
+    }
+
+    protected Wallet(Parcel in) {
+        this.displayName = in.readString();
+        this.coinCode = in.readString();
+        this.walletAddress = in.readString();
+        this.balance = in.readParcelable(Balance.class.getClassLoader());
+        this.coinWorth = in.readString();
+    }
+
+    public static final Parcelable.Creator<Wallet> CREATOR = new Parcelable.Creator<Wallet>() {
+        @Override
+        public Wallet createFromParcel(Parcel source) {
+            return new Wallet(source);
+        }
+
+        @Override
+        public Wallet[] newArray(int size) {
+            return new Wallet[size];
+        }
+    };
 }

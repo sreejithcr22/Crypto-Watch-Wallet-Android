@@ -23,7 +23,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.codit.cryptowatchwallet.R;
 import com.codit.cryptowatchwallet.model.Wallet;

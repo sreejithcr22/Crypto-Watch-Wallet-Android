@@ -8,6 +8,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.codit.cryptowatchwallet.R;
 import com.codit.cryptowatchwallet.activity.MainActivity;
+import com.codit.cryptowatchwallet.helper.PreferenceHelper;
 
 
 /**
@@ -20,6 +21,8 @@ public class NotificationService extends IntentService {
 public static final String WALLET_TITLE="wallet_title";
 public static final String NEW_TRANS_COUNT="new_trans_count";
 public static final String WALLET_BALANCE_DIFF="wallet_balance_diff";
+PreferenceHelper helper;
+
 
     public NotificationService() {
         super("NotificationService");
@@ -29,6 +32,8 @@ public static final String WALLET_BALANCE_DIFF="wallet_balance_diff";
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
 
+
+            helper=new PreferenceHelper(this);
 
             String notificationTitle=intent.getStringExtra(WALLET_TITLE);
             String message1=String.valueOf(intent.getLongExtra(NEW_TRANS_COUNT,0));
@@ -43,7 +48,7 @@ public static final String WALLET_BALANCE_DIFF="wallet_balance_diff";
                     .setSmallIcon(R.mipmap.ic_launcher);
 
             NotificationManager manager= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            manager.notify(5,builder.build());
+            manager.notify(helper.generateNotificationID(),builder.build());
 
         }
     }

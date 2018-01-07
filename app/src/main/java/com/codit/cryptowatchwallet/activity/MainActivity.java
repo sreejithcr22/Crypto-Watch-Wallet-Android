@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -40,9 +41,10 @@ import com.google.zxing.integration.android.IntentResult;
 
 public class MainActivity extends AppCompatActivity implements SettingsFragment.onCurrencyPreferenceClickListener{
 
-     static final String FRAGMENT_MARKET="market_fragment";
-     static final String FRAGMENT_WALLET="wallet_fragment";
-    private Toolbar toolbar;
+     private static final String FRAGMENT_MARKET="market_fragment";
+     private static final String FRAGMENT_WALLET="wallet_fragment";
+     private static final String FRAGMENT_SETTINGS="settings_fragment";
+     private Toolbar toolbar;
 
     MarketFragment marketFragment;
     WalletFragment walletFragment;
@@ -55,35 +57,22 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_home:
+                case R.id.navigation_wallets:
 
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new WalletFragment(),FRAGMENT_WALLET).commit();
+                    if(getSupportFragmentManager().findFragmentByTag(FRAGMENT_WALLET)==null)
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new WalletFragment(), FRAGMENT_WALLET).commit();
+
                     return true;
-                case R.id.navigation_dashboard:
-                   //
+                case R.id.navigation_market:
+
+                    if(getSupportFragmentManager().findFragmentByTag(FRAGMENT_MARKET)==null)
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new MarketFragment(),FRAGMENT_MARKET).commit();
 
                     return true;
-                case R.id.navigation_notifications:
+                case R.id.navigation_settings:
 
-                   /*Intent intent=new Intent(MainActivity.this, AddWalletService.class);
-                   intent.putExtra(Wallet.WALLET_NAME,"zero btc1");
-                   intent.putExtra(Wallet.WALLET_COIN_CODE, Coin.BTC);
-                   intent.putExtra(Wallet.WALLET_ADDRESS,"1FK1rNLV69C85ut7XfQVsyVgVWoesQNN8f");
-                   startService(intent);*/
-
-                  /*  Intent intent1=new Intent(MainActivity.this, AddWalletService.class);
-                    intent1.putExtra(Wallet.WALLET_NAME,"shopping");
-                    intent1.putExtra(Wallet.WALLET_COIN_CODE,Coin.BCH);
-                    intent1.putExtra(Wallet.WALLET_ADDRESS,"17Wk4GPKw9nZ9PbspzaxN3fv1L2m9NA9dg");
-                    startService(intent1);*/
-
-                   Intent intent2=new Intent(MainActivity.this, AddWalletService.class);
-                    intent2.putExtra(Wallet.WALLET_NAME,"large");
-                    intent2.putExtra(Wallet.WALLET_COIN_CODE,Coin.ETH);
-                    intent2.putExtra(Wallet.WALLET_ADDRESS,"0x281055Afc982d96fAB65b3a49cAc8b878184Cb16");
-                    startService(intent2);
-                   getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new SettingsFragment()).commit();
+                    if(getSupportFragmentManager().findFragmentByTag(FRAGMENT_SETTINGS)==null)
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new SettingsFragment(),FRAGMENT_SETTINGS).commit();
 
                     return true;
             }
@@ -116,6 +105,9 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
         toolbar=findViewById(R.id.toolbar);
         toolbar.setTitle("Wallets");
         setSupportActionBar(toolbar);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new WalletFragment(),FRAGMENT_WALLET).commit();
+
 
 
 

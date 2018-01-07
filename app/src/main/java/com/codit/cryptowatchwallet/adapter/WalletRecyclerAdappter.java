@@ -1,5 +1,7 @@
 package com.codit.cryptowatchwallet.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +11,9 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.codit.cryptowatchwallet.R;
+import com.codit.cryptowatchwallet.activity.WalletDetailsActivity;
 import com.codit.cryptowatchwallet.model.Wallet;
+import com.codit.cryptowatchwallet.util.Coin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +26,12 @@ public class WalletRecyclerAdappter  extends RecyclerView.Adapter<WalletRecycler
 
     List<Wallet> walletList=new ArrayList<>();
     List<Wallet>walletListCopy=new ArrayList<>();
+    Context context;
 
-    public WalletRecyclerAdappter(List<Wallet> walletList) {
+    public WalletRecyclerAdappter(Context context,List<Wallet> walletList) {
         this.walletList = walletList;
         this.walletListCopy=walletList;
+        this.context=context;
     }
 
     @Override
@@ -35,11 +41,21 @@ public class WalletRecyclerAdappter  extends RecyclerView.Adapter<WalletRecycler
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Wallet wallet=walletList.get(position);
+        final Wallet wallet=walletList.get(position);
         holder.walletName.setText(wallet.getDisplayName());
-        holder.walletCoinCode.setText(wallet.getCoinCode());
-        holder.walletBalance.setText(String.valueOf(wallet.getBalance().getCoinBalance()));
+        holder.walletCoinCode.setText(Coin.getCoinName(wallet.getCoinCode()));
+        holder.walletBalance.setText(String.valueOf(wallet.getBalance().getCoinBalance())+" "+wallet.getCoinCode());
         holder.walletWorth.setText(wallet.getCoinWorth());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent=new Intent(context,WalletDetailsActivity.class);
+                intent.putExtra(Wallet.EXTRA_WALLET_OBJECT,wallet);
+                context.startActivity(intent);
+            }
+        });
 
     }
 

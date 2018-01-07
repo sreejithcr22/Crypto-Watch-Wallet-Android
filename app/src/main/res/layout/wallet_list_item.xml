@@ -1,30 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/wallet_name"
-        android:layout_margin="5dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    android:layout_height="@dimen/wallet_item_height"
+    android:layout_marginLeft="@dimen/wallet_item_left_right_margin"
+    android:layout_marginRight="@dimen/wallet_item_left_right_margin"
+    android:paddingTop="@dimen/wallet_item_top_bottom_padding"
+    android:paddingBottom="@dimen/wallet_item_top_bottom_padding">
 
-    <TextView
-        android:id="@+id/wallet_coin_code"
-        android:layout_margin="5dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/wallet_balance"
-        android:layout_margin="5dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <LinearLayout
+            android:gravity="center|start"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/wallet_worth"
-        android:layout_margin="5dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+            <TextView
+                android:textSize="@dimen/wallet_list_item_name_text_size"
+                android:fontFamily="@font/quicksand_bold"
+                android:singleLine="true"
+                android:id="@+id/wallet_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-</LinearLayout>
+            <TextView
+                android:textStyle="bold"
+                android:textSize="@dimen/wallet_list_item_label_text_size"
+                android:fontFamily="@font/quicksand_regular"
+                android:singleLine="true"
+                android:id="@+id/wallet_coin_code"
+                android:layout_marginTop="@dimen/wallet_list_item_coin_code_margin_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:gravity="center|end"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+
+            <TextView
+
+                android:textSize="@dimen/wallet_list_item_price_text_size"
+                android:textColor="@android:color/white"
+                android:background="@drawable/balance_bg"
+                android:fontFamily="@font/colabreg"
+                android:singleLine="true"
+                android:id="@+id/wallet_balance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:textSize="@dimen/wallet_list_item_price_text_size"
+                android:textColor="@android:color/white"
+                android:singleLine="true"
+                android:fontFamily="@font/colabreg"
+                android:background="@drawable/price_green_bg"
+                android:id="@+id/wallet_worth"
+                android:layout_marginTop="@dimen/wallet_list_item_coin_code_margin_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+

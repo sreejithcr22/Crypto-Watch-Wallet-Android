@@ -17,6 +17,7 @@ public class Coin {
     public static final String DASH="DASH";
     public static final String LTC="LTC";
     public static final String DOGE="DOGE";
+    public static final String XRP="XRP";
 
 
 
@@ -31,6 +32,8 @@ public class Coin {
             case DASH:smallestUnit=SATOSHI;break;
             case LTC:smallestUnit=SATOSHI;break;
             case DOGE:smallestUnit=SATOSHI;break;
+            case XRP:smallestUnit=SATOSHI;break;
+
 
 
             default:smallestUnit=0;
@@ -47,6 +50,29 @@ public class Coin {
     public static String calculateCoinWorth(String coinCount,double coinRate,String currencyCode){
         BigDecimal rate = new BigDecimal(String.valueOf(coinRate)).multiply(new BigDecimal(coinCount));
         BigDecimal roundOff = rate.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-        return currencyCode+" "+roundOff.toPlainString();}
+        return roundOff.toPlainString()+" "+currencyCode;}
 
+
+
+public static String getCoinName(String coinCode) {
+    switch (coinCode) {
+        case BTC:
+            return "Bitcoin";
+        case ETH:
+            return "Ethereum";
+        case BCH:
+            return "Bitcoin Cash";
+        case DASH:
+            return "Dash";
+        case LTC:
+            return "Litecoin";
+        case DOGE:
+            return "Dogecoin";
+        case XRP:
+            return "Ripple";
+        default:
+            return "";
+    }
 }
+}
+

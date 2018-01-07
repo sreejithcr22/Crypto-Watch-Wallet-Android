@@ -1,0 +1,13 @@
+<vector android:height="24dp" android:viewportHeight="512.0"
+    android:viewportWidth="512.0" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#FFFFFF" android:pathData="M215,0H15C6.7,0 0,6.7 0,15v200c0,8.3 6.7,15 15,15h200c8.3,0 15,-6.7 15,-15V15C230,6.7 223.3,0 215,0zM200,200H30V30h170V200z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M145,70H85c-8.3,0 -15,6.7 -15,15v60c0,8.3 6.7,15 15,15h60c8.3,0 15,-6.7 15,-15V85C160,76.7 153.3,70 145,70zM130,130h-30v-30h30V130z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M497,0H297c-8.3,0 -15,6.7 -15,15v200c0,8.3 6.7,15 15,15h200c8.3,0 15,-6.7 15,-15V15C512,6.7 505.3,0 497,0zM482,200H312V30h170V200z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M427,70h-60c-8.3,0 -15,6.7 -15,15v60c0,8.3 6.7,15 15,15h60c8.3,0 15,-6.7 15,-15V85C442,76.7 435.3,70 427,70zM412,130h-30v-30h30V130z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M215,282H15c-8.3,0 -15,6.7 -15,15v200c0,8.3 6.7,15 15,15h200c8.3,0 15,-6.7 15,-15V297C230,288.7 223.3,282 215,282zM200,482H30V312h170V482z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M145,352H85c-8.3,0 -15,6.7 -15,15v60c0,8.3 6.7,15 15,15h60c8.3,0 15,-6.7 15,-15v-60C160,358.7 153.3,352 145,352zM130,412h-30v-30h30V412z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M497,422.6h-85V367c0,-8.3 -6.7,-15 -15,-15s-15,6.7 -15,15v70.6c0,8.3 6.7,15 15,15h85V482h-85c-8.3,0 -15,6.7 -15,15s6.7,15 15,15h100c8.3,0 15,-6.7 15,-15v-59.4C512,429.4 505.3,422.6 497,422.6z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M497,282c-8.3,0 -15,6.7 -15,15v70c0,8.3 6.7,15 15,15s15,-6.7 15,-15v-70C512,288.7 505.3,282 497,282z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M367,282h-70c-8.3,0 -15,6.7 -15,15v70c0,8.3 6.7,15 15,15s15,-6.7 15,-15v-55h55c8.3,0 15,-6.7 15,-15S375.3,282 367,282z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M297,422.6c-8.3,0 -15,6.7 -15,15V497c0,8.3 6.7,15 15,15s15,-6.7 15,-15v-59.4C312,429.4 305.3,422.6 297,422.6z"/>
+</vector>

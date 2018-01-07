@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.codit.cryptowatchwallet"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -37,5 +37,5 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
-
+    compile 'com.android.support:cardview-v7:26.1.0'
 }

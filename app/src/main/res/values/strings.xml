@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Crypto Watch Wallet</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_wallets">Wallets</string>
+    <string name="title_market">Market</string>
+    <string name="title_settings">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -19,7 +19,6 @@
         <item>Dogecoin (DOGE)</item>
         <item>Zcash (ZEC)</item>
         <item>NEO (NEO)</item>
-
 
 
     </string-array>
