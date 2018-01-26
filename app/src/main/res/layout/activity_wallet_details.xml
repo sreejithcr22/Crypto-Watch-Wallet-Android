@@ -15,8 +15,9 @@
        >
 
         <android.support.v7.widget.Toolbar
+            app:titleTextAppearance="@style/Toolbar.TitleText"
+            app:subtitleTextAppearance="@style/Toolbar.SubTitleText"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:titleTextColor="@android:color/white"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -30,24 +31,36 @@
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <LinearLayout
-        android:orientation="vertical"
+    <RelativeLayout
+        android:background="?attr/colorPrimary"
         android:id="@+id/wallet_details_coin_worth_layout"
         android:layout_weight=".8"
         android:layout_width="match_parent"
         android:layout_height="0dp">
 
         <TextView
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/caviar_dreams_bold"
             android:id="@+id/wallet_details_coin_worth_text"
             android:textColor="@android:color/white"
-            android:background="?attr/colorPrimary"
             android:textSize="@dimen/wallet_details_coin_worth_text_size"
             android:gravity="center"
             android:layout_gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-    </LinearLayout>
+        <TextView
+            android:layout_marginLeft="5dp"
+        android:fontFamily="@font/quicksand_regular"
+            android:textColor="#ffffff"
+            android:text="Coin Worth"
+            android:layout_alignStart="@+id/wallet_details_coin_worth_text"
+            android:layout_alignLeft="@+id/wallet_details_coin_worth_text"
+            android:layout_above="@+id/wallet_details_coin_worth_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,6 +70,7 @@
         android:paddingBottom="@dimen/wallet_details_layout_padding_bottom">
 
         <LinearLayout
+
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -64,12 +78,15 @@
             android:orientation="horizontal">
 
             <LinearLayout
+
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <TextView
+                    android:textAppearance="@style/TextAppearance.AppCompat.price_text"
+
                     android:id="@+id/wallet_details_balance_text"
                     android:layout_marginBottom="@dimen/wallet_details_text_margin_bottom"
                     android:layout_width="match_parent"
@@ -79,13 +96,21 @@
                     android:textSize="@dimen/wallet_details_text_size" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    style="@style/TextAppearance.AppCompat.wallet_details_label"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Balance" />
 
             </LinearLayout>
+
+            <View
+                android:visibility="gone"
+                android:background="@color/colorAccent"
+                android:layout_width="2dp"
+                android:layout_height="match_parent"></View>
 
 
             <LinearLayout
@@ -95,6 +120,8 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:textAppearance="@style/TextAppearance.AppCompat.price_text"
+
                     android:id="@+id/wallet_details_unconf_balance_text"
 
                     android:gravity="bottom|center"
@@ -105,7 +132,9 @@
                     android:layout_weight="3" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_gravity="center"
+                    style="@style/TextAppearance.AppCompat.wallet_details_label"
+                    android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -114,6 +143,12 @@
             </LinearLayout>
 
         </LinearLayout>
+
+        <View
+            android:visibility="gone"
+            android:background="@color/colorAccent"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"></View>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -129,6 +164,8 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:textAppearance="@style/TextAppearance.AppCompat.price_text"
+
                     android:layout_marginBottom="@dimen/wallet_details_text_margin_bottom"
                     android:id="@+id/wallet_details_total_sent_text"
 
@@ -140,13 +177,23 @@
                     />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_gravity="center"
+                    style="@style/TextAppearance.AppCompat.wallet_details_label"
+                    android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Total sent" />
 
             </LinearLayout>
+
+
+
+            <View
+                android:visibility="gone"
+                android:background="@color/colorAccent"
+                android:layout_width="2dp"
+                android:layout_height="match_parent"></View>
 
 
             <LinearLayout
@@ -156,6 +203,8 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:textAppearance="@style/TextAppearance.AppCompat.price_text"
+
                     android:id="@+id/wallet_details_total_received_text"
                     android:layout_marginBottom="@dimen/wallet_details_text_margin_bottom"
                     android:gravity="bottom|center"
@@ -165,7 +214,9 @@
                     android:layout_weight="3" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_gravity="center"
+                    style="@style/TextAppearance.AppCompat.wallet_details_label"
+                    android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -174,6 +225,12 @@
             </LinearLayout>
 
         </LinearLayout>
+
+        <View
+            android:visibility="gone"
+            android:background="@color/colorAccent"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"></View>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -189,6 +246,8 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:textAppearance="@style/TextAppearance.AppCompat.price_text"
+
                     android:id="@+id/wallet_details_transactions_text"
 
                     android:layout_marginBottom="@dimen/wallet_details_text_margin_bottom"
@@ -200,13 +259,23 @@
                     />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    style="@style/TextAppearance.AppCompat.wallet_details_label"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Transactions" />
 
             </LinearLayout>
+
+
+
+            <View
+                android:visibility="gone"
+                android:background="@color/colorAccent"
+                android:layout_width="2dp"
+                android:layout_height="match_parent"></View>
 
 
             <LinearLayout
@@ -216,6 +285,8 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:textAppearance="@style/TextAppearance.AppCompat.price_text"
+
                     android:id="@+id/wallet_details_unconf_transactions_text"
                     android:gravity="bottom|center"
                     android:textSize="@dimen/wallet_details_text_size"
@@ -225,7 +296,9 @@
                     android:layout_weight="3" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    style="@style/TextAppearance.AppCompat.wallet_details_label"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"

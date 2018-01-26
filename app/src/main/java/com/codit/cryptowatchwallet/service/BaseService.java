@@ -40,7 +40,14 @@ public abstract class BaseService extends IntentService {
     public static final String REPOT_TYPE_SUCCESS="report_success";
     public static final String REPOT_TYPE_FAILURE="report_failure";
     public static final String REPORT_TYPE_WARNING="report_warning";
-    public static final String FLAG_REFRESH_WALLET="flag_refresh_wallet";
+    public static final String EXTRA_SHOULD_IGNORE_WALLET_REFRESH="ignore_wallet_refresh";
+
+    private final static String BASE_URL_BLOCKCYPHER="https://api.blockcypher.com/v1/";
+    private final static String BASE_URL_BCASH="https://blockdozer.com/insight-api/";
+    private final static String BASE_URL_RIPPLE="https://data.ripple.com/v2/accounts/";
+
+    public static final String EXTRA_SHOULD_START_NOTIFICATION="start_notification";
+    public static final String EXTRA_SHOULD_UPDATE_WALLET_WORTH="update_wallet_worth";
 
     public   MarketDao marketDao;
     public   WalletDao walletDao;
@@ -57,7 +64,7 @@ public abstract class BaseService extends IntentService {
     Balance getBalanceFromServer(String coinCode, String address)
     {
 
-        Retrofit retrofit=new Retrofit.Builder().baseUrl("https://api.blockcypher.com")
+        Retrofit retrofit=new Retrofit.Builder().baseUrl(BASE_URL_BLOCKCYPHER)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         WalletApi walletApi=retrofit.create(WalletApi.class);
@@ -66,7 +73,7 @@ public abstract class BaseService extends IntentService {
 
             if (coinCode.equals(Coin.BTC) || coinCode.equals(Coin.ETH) || coinCode.equals(Coin.LTC) || coinCode.equals(Coin.DASH) || coinCode.equalsIgnoreCase(Coin.DOGE)) {
 
-                Response<CypherAddressBalance> response=walletApi.getCypherAddressBalance("https://api.blockcypher.com/v1/"+coinCode.toLowerCase()+"/main/addrs/"+address+"/balance").execute();
+                Response<CypherAddressBalance> response=walletApi.getCypherAddressBalance(BASE_URL_BLOCKCYPHER+coinCode.toLowerCase()+"/main/addrs/"+address+"/balance").execute();
 
 
                 if(response.isSuccessful())
@@ -130,11 +137,23 @@ public abstract class BaseService extends IntentService {
 
     }
 
+    Wallet getWalletByName(String walletName)
+    {
+        try {
+            Wallet wallet=walletDao.getWalletByName(walletName);
+            return wallet;
+        }catch (Exception e)
+        {
+            return null;
+        }
+
+    }
+
     synchronized int updateWalletsDB(List<Wallet>wallets)
     {
         try {
             int rows= walletDao.updateWallets(wallets);
-            Log.d("wallet", "updateCoinsWorth: "+String.valueOf(rows)+" rows updated");
+            Log.d("wallet", "updateWalletsDB(): "+String.valueOf(rows)+" rows updated");
             return rows;
         }catch (Exception e)
         {

@@ -3,6 +3,7 @@ package com.codit.cryptowatchwallet.service;
 import android.content.Intent;
 import android.util.Log;
 
+import com.codit.cryptowatchwallet.helper.PreferenceHelper;
 import com.codit.cryptowatchwallet.model.Wallet;
 
 import com.codit.cryptowatchwallet.util.Coin;
@@ -13,15 +14,23 @@ import java.util.List;
 
 public class UpdateWalletsWorthService extends BaseService {
 
+    private PreferenceHelper helper;
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
-            Log.d("wallet", "updateworth: ");
+            helper=new PreferenceHelper(this);
+            Log.d("wallet", "UpdateWalletsWorthService ");
             initializeDB();
-            String currencyCode=intent.getStringExtra(Currency.EXTRA_DATA_CURRENCY_CODE);
+            String currencyCode=Currency.currencyArray[helper.getDefaultCurrency()];
+            Boolean startNotificationService=intent.getBooleanExtra(BaseService.EXTRA_SHOULD_START_NOTIFICATION,false);
             if(currencyCode!=null)
             {
                 updateCoinsWorth(currencyCode);
+
+                if(startNotificationService)
+                {
+                    startService(new Intent(this,NotificationService.class));
+                }
             }
         }
     }

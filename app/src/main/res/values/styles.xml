@@ -26,5 +26,31 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">22sp</item>
+        <item name="android:fontFamily">@font/quicksand_bold</item>
+        <item name="android:textColor">#ffffff</item>
+
+    </style>
+
+    <style name="Toolbar.SubTitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+    <item name="android:textSize">16sp</item>
+    <item name="android:fontFamily">@font/quicksand_regular</item>
+    <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.price_text" parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/caviardreams</item>
+
+    </style>
+
+    <style name="TextAppearance.AppCompat.wallet_details_label" parent="TextAppearance.AppCompat">
+        <item name="android:layout_marginTop">@dimen/wallet_details_label_margin_top</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:background">@drawable/price_green_bg</item>
+        <item name="android:fontFamily">@font/quicksand_bold</item>
+        <item name="android:textSize">@dimen/wallet_details_label_text_size</item>
+
+    </style>
 
 </resources>

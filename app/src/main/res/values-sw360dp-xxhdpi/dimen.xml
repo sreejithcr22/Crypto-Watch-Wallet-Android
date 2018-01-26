@@ -27,14 +27,16 @@
 
 
     <!--wallet details activity!-->
-    <dimen name="wallet_details_text_margin_bottom">5dp</dimen>
-    <dimen name="wallet_details_text_size">23sp</dimen>
+    <dimen name="wallet_details_text_margin_bottom">7dp</dimen>
+    <dimen name="wallet_details_text_size">17sp</dimen>
     <dimen name="wallet_details_layout_padding_bottom">20dp</dimen>
     <dimen name="wallet_details_coin_worth_text_size">40sp</dimen>
+    <dimen name="wallet_details_label_text_size">17sp</dimen>
+    <dimen name="wallet_details_label_margin_top">8dp</dimen>
 
     <!--text_bg_shape!-->
     <dimen name="corner_radius">3dp</dimen>
-    <dimen name="padding_top_bottom">1dp</dimen>
+    <dimen name="padding_top_bottom">2dp</dimen>
     <dimen name="padding_left_right">4dp</dimen>
 
 

@@ -19,4 +19,6 @@ public interface WalletApi {
 
     @GET
     Call<BCHAddressBalance> getBCHAddressBalance(@Url String url);
+
+
 }

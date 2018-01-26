@@ -1,18 +1,10 @@
 package com.codit.cryptowatchwallet.activity;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -20,24 +12,17 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.codit.cryptowatchwallet.R;
 import com.codit.cryptowatchwallet.fragment.MarketFragment;
 import com.codit.cryptowatchwallet.fragment.SettingsFragment;
 import com.codit.cryptowatchwallet.fragment.WalletFragment;
 import com.codit.cryptowatchwallet.helper.PreferenceHelper;
-import com.codit.cryptowatchwallet.model.Wallet;
-import com.codit.cryptowatchwallet.service.AddWalletService;
+import com.codit.cryptowatchwallet.receiver.ScheduleAlarm;
+import com.codit.cryptowatchwallet.service.BaseService;
 import com.codit.cryptowatchwallet.service.FetchMarketDataService;
-import com.codit.cryptowatchwallet.service.NotificationService;
-import com.codit.cryptowatchwallet.service.RefreshWalletService;
 import com.codit.cryptowatchwallet.service.UpdateWalletsWorthService;
-import com.codit.cryptowatchwallet.util.Coin;
 import com.codit.cryptowatchwallet.util.Currency;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 public class MainActivity extends AppCompatActivity implements SettingsFragment.onCurrencyPreferenceClickListener{
 
@@ -80,12 +65,15 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
         }
     };
 
-    void setUpAlarm()
+    private void setUpAlarm()
     {
-        Intent intent = new Intent(this, RefreshWalletService.class);
-        PendingIntent pintent = PendingIntent.getService(getBaseContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarm = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 5*60*1000, pintent);
+
+        /*Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
+        PendingIntent pintent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarm = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 5*60*1000, pintent);*/
+        Intent intent=new Intent(this, ScheduleAlarm.class);
+        sendBroadcast(intent);
     }
 
 
@@ -107,16 +95,6 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
         setSupportActionBar(toolbar);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new WalletFragment(),FRAGMENT_WALLET).commit();
-
-
-
-
-
-
-
-
-
-
 
     }
 
@@ -141,7 +119,8 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
         {
             preferenceHelper.setSessionCount(preferenceHelper.getSessionCount()+1);
             PreferenceHelper.SESSION_COUNT_UPDATED=true;
-            startService(new Intent(this,FetchMarketDataService.class));
+            Intent intent=new Intent(this,FetchMarketDataService.class);
+            startService(intent);
         }
         Log.d("session", "count="+preferenceHelper.getSessionCount());
     }

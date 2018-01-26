@@ -1,30 +1,12 @@
 package com.codit.cryptowatchwallet.service;
 
-import android.app.IntentService;
 import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.EditText;
-import android.widget.Toast;
 
-import com.codit.cryptowatchwallet.api.WalletApi;
-import com.codit.cryptowatchwallet.model.BCHAddressBalance;
 import com.codit.cryptowatchwallet.model.Balance;
-import com.codit.cryptowatchwallet.model.CypherAddressBalance;
 import com.codit.cryptowatchwallet.model.Wallet;
-import com.codit.cryptowatchwallet.orm.AppDatabase;
-import com.codit.cryptowatchwallet.orm.MarketDao;
-import com.codit.cryptowatchwallet.orm.WalletDao;
 import com.codit.cryptowatchwallet.util.Coin;
 import com.codit.cryptowatchwallet.util.Currency;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.List;
-
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class AddWalletService extends BaseService {
@@ -40,7 +22,7 @@ public class AddWalletService extends BaseService {
 
             initializeDB();
             //check values not null
-            if(walletName==null||walletCoinCode==null||walletAddress==null||checkIfWalletDuplicate(walletName,walletAddress))return;
+            if(walletName==null||walletCoinCode==null||walletAddress==null|| isWalletDuplicate(walletName,walletAddress))return;
 
 
             Log.d("wallet", "onHandleIntent: past unique check");
@@ -57,7 +39,6 @@ public class AddWalletService extends BaseService {
 
                   //fetch market data and refresh wallets
                     Intent marketIntent=new Intent(this,FetchMarketDataService.class);
-                    marketIntent.putExtra(BaseService.FLAG_REFRESH_WALLET,true);
                     startService(marketIntent);
 
 
@@ -82,7 +63,7 @@ public class AddWalletService extends BaseService {
     }
 
 
-    public boolean checkIfWalletDuplicate(String walletName,String walletAddress)
+    public boolean isWalletDuplicate(String walletName, String walletAddress)
     {
         Wallet object=walletDao.checkIfNameDuplicate(walletName);
         if(object!=null)

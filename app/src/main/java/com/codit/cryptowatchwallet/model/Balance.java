@@ -87,38 +87,6 @@ public class Balance implements Parcelable {
     long unConfirmedTransactionCount;
 
 
-    public static  void isEqual(Balance oldBalance, Balance newBalance, String walletName, String coinCode, Context context)
-    {
-            BigDecimal oldCoinBalance=new BigDecimal(oldBalance.getCoinBalance());
-            BigDecimal newCoinBalance=new BigDecimal(newBalance.getCoinBalance());
-            String coinBalanceDifference=null;
-            long newTransactionsCount=0;
-
-            if((newTransactionsCount=newBalance.getTransactionCount()-oldBalance.getTransactionCount())>0) {
-
-                if (oldCoinBalance.compareTo(newCoinBalance) != 0)
-                    coinBalanceDifference = newCoinBalance.subtract(oldCoinBalance).toPlainString();
-
-                Intent intent=new Intent(context, NotificationService.class);
-                intent.putExtra(NotificationService.WALLET_TITLE,walletName+"-"+coinCode);
-                intent.putExtra(NotificationService.NEW_TRANS_COUNT,newTransactionsCount);
-                intent.putExtra(NotificationService.WALLET_BALANCE_DIFF,coinBalanceDifference);
-                context.startService(intent);
-
-            }
-
-
-      /*  if     (balance1.getCoinBalance()!=balance2.getCoinBalance()||
-                balance1.getTotalReceived()!=balance2.getTotalReceived()||
-                balance1.getTotalSent()!=balance2.getTotalSent()||
-                balance1.getUnconfirmedBalance()!=balance2.getUnconfirmedBalance()||
-                balance1.getUnConfirmedTransactionCount()!=balance2.getUnConfirmedTransactionCount()||
-                balance1.getTransactionCount()!=balance2.getTransactionCount()){
-            Log.d("wallet", "isEqual: false");
-
-*/
-
-        }
 
 
     @Override

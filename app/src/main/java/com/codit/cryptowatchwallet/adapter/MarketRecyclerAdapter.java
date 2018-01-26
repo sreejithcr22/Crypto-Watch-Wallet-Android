@@ -28,7 +28,6 @@ public class MarketRecyclerAdapter extends RecyclerView.Adapter<MarketRecyclerAd
 
     List<CoinPrices> coinPricesList=new ArrayList<>();
     List<CoinPrices> coinPricesListCopy=new ArrayList<>();
-    static final String TAG="recyclerview";
     PreferenceHelper preferenceHelper;
 
 
@@ -37,13 +36,10 @@ public class MarketRecyclerAdapter extends RecyclerView.Adapter<MarketRecyclerAd
         this.coinPricesListCopy=coinPricesList;
         preferenceHelper=new PreferenceHelper(context.getApplicationContext());
 
-        Log.d("search", "constructor: ");
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        Log.d(TAG, "onCreateViewHolder: ");
 
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.market_list_item, parent, false));
 
@@ -53,7 +49,6 @@ public class MarketRecyclerAdapter extends RecyclerView.Adapter<MarketRecyclerAd
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         String coinCode=coinPricesList.get(position).getCoinCode();
-        Log.d(TAG, "onBindViewHolder: "+String.valueOf(position));
         holder.coinCode.setText(Coin.getCoinName(coinCode)+" ("+coinCode+")");
         holder.coinPrice.setText(Currency.currencyArray[preferenceHelper.getDefaultCurrency()]+" "+String.valueOf(coinPricesList.get(position).getPrices().get(Currency.currencyArray[preferenceHelper.getDefaultCurrency()])));
 
@@ -61,7 +56,6 @@ public class MarketRecyclerAdapter extends RecyclerView.Adapter<MarketRecyclerAd
 
     @Override
     public int getItemCount() {
-        Log.d(TAG, "getItemCount: "+coinPricesList.size());
         return coinPricesList.size();
     }
 
@@ -89,7 +83,7 @@ public class MarketRecyclerAdapter extends RecyclerView.Adapter<MarketRecyclerAd
                 else {
                     List<CoinPrices> filteredList=new ArrayList<>();
                     for (CoinPrices coinPrices:coinPricesListCopy) {
-                        if(coinPrices.getCoinCode().toLowerCase().contains(searchString.toLowerCase()))
+                        if(coinPrices.getCoinCode().toLowerCase().contains(searchString.toLowerCase())||Coin.getCoinName(coinPrices.getCoinCode()).toLowerCase().contains(searchString.toLowerCase()))
                         {
                             filteredList.add(coinPrices);
                         }

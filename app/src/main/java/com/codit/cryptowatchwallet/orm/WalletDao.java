@@ -40,4 +40,7 @@ public interface WalletDao {
     @Delete
     int deleteWallet(Wallet wallet);
 
+    @Query("Select * from Wallet where displayName=:displayName")
+    Wallet getWalletByName(String displayName);
+
 }

@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import com.codit.cryptowatchwallet.R;
 import com.codit.cryptowatchwallet.adapter.MarketRecyclerAdapter;
 import com.codit.cryptowatchwallet.model.CoinPrices;
+import com.codit.cryptowatchwallet.service.BaseService;
 import com.codit.cryptowatchwallet.service.FetchMarketDataService;
 import com.codit.cryptowatchwallet.util.RecyclerviewSearchListener;
 import com.codit.cryptowatchwallet.viewmodel.MarketViewModel;
@@ -82,7 +83,9 @@ public class MarketFragment extends Fragment  implements RecyclerviewSearchListe
                     @Override
                     public void onRefresh() {
 
-                        getContext().startService(new Intent(getContext(), FetchMarketDataService.class));
+                        Intent intent=new Intent(getContext(),FetchMarketDataService.class);
+                        intent.putExtra(BaseService.EXTRA_SHOULD_IGNORE_WALLET_REFRESH,true);
+                        getContext().startService(intent);
                     }
                 }
         );

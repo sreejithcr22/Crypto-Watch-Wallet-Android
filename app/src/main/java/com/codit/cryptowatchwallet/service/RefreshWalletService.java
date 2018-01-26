@@ -1,15 +1,20 @@
 package com.codit.cryptowatchwallet.service;
 
-import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Vibrator;
 import android.util.Log;
 
 import com.codit.cryptowatchwallet.helper.PreferenceHelper;
 import com.codit.cryptowatchwallet.model.Balance;
+import com.codit.cryptowatchwallet.model.Transaction;
 import com.codit.cryptowatchwallet.model.Wallet;
 import com.codit.cryptowatchwallet.util.Currency;
+import com.google.gson.Gson;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -21,20 +26,23 @@ public class RefreshWalletService extends BaseService {
 
         if (intent != null)
         {
-            helper=new PreferenceHelper(this.getApplicationContext());
-            Log.d("wallet", "refresh: ");
             initializeDB();
-            refreshWallets();
-            updateWalletsWorth();
+            helper=new PreferenceHelper(this.getApplicationContext());
+            Log.d("wallet", "RefreshWalletService ");
+
+            int updatesCount=refreshWallets();
+            updateWalletsWorth(updatesCount>0);
+
         }
     }
 
 
-void refreshWallets()
+private int refreshWallets()
 {
     List<Wallet> wallets=getAllWallets();
     List<Wallet>updated=new ArrayList<>();
-    if(wallets==null)return;
+    HashMap<String,String> notifications=new HashMap<>();
+    if(wallets==null)return 0;
 
 
     for (Wallet wallet:wallets)
@@ -43,31 +51,70 @@ void refreshWallets()
         if(newBalance!=null)
         {
             Log.d("wallet", "refreshWallets: got balance");
-            Balance.isEqual(wallet.getBalance(),newBalance,wallet.getDisplayName(),wallet.getCoinCode(),this);
-            wallet.setBalance(newBalance);
-            updated.add(wallet);
+            Transaction transaction=checkForNewTnx(wallet.getBalance(),newBalance);
+            if(transaction.getTnxCount()>0) {
+                wallet.setBalance(newBalance);
+                updated.add(wallet);
+                notifications.put(wallet.getDisplayName(),new Gson().toJson(transaction));
+            }
         }
 
         //delay the api call so that the ip address is not banned by api provider
-        try {Log.d("wallet", "refreshWallets: before sleep");
+        try {
 
             Thread.sleep(3000);
-            Log.d("wallet", "refreshWallets: after sleep");
+
         } catch (InterruptedException e) {}
     }
+
     if (updated.size()!=0)
     {
         updateWalletsDB(updated);
+        updateNotificationsQueue(notifications);
+        return updated.size();
+
     }
-    else Log.d("wallet", "refreshWallets: no update available");
+    else
+    {
+        Log.d("wallet", "refreshWallets: no update available");
+        return 0;
+    }
 
 }
 
-void updateWalletsWorth()
+private void updateNotificationsQueue(HashMap<String,String> notifications)
+{
+    String jsonString=new Gson().toJson(notifications);
+    helper.updateNotificationQ(jsonString);
+}
+
+
+    void updateWalletsWorth(boolean shouldStartNotification)
 {
     Intent intent1=new Intent(getApplicationContext(),UpdateWalletsWorthService.class);
-    intent1.putExtra(Currency.EXTRA_DATA_CURRENCY_CODE,Currency.currencyArray[helper.getDefaultCurrency()]);
+    intent1.putExtra(BaseService.EXTRA_SHOULD_START_NOTIFICATION,shouldStartNotification);
+
     startService(intent1);
 }
+
+
+    private Transaction checkForNewTnx(Balance oldBalance, Balance newBalance)
+    {
+        BigDecimal oldCoinBalance=new BigDecimal(oldBalance.getCoinBalance());
+        BigDecimal newCoinBalance=new BigDecimal(newBalance.getCoinBalance());
+
+        String coinBalanceDifference;
+        long newTransactionsCount;
+
+        if((newTransactionsCount=newBalance.getTransactionCount()-oldBalance.getTransactionCount())>0) {
+
+                coinBalanceDifference = newCoinBalance.subtract(oldCoinBalance).toPlainString();
+                return new Transaction(newTransactionsCount,coinBalanceDifference);
+        }
+
+        return new Transaction(0,null);
+
+    }
+
 
 }

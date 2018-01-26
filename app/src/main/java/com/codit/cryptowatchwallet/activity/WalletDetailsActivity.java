@@ -53,6 +53,7 @@ public class WalletDetailsActivity extends AppCompatActivity {
         unconfTransactionsText=findViewById(R.id.wallet_details_unconf_transactions_text);
 
         toolbar.setTitle(wallet.getDisplayName());
+        toolbar.setSubtitle(Coin.getCoinName(wallet.getCoinCode())+" ("+wallet.getCoinCode()+")");
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {

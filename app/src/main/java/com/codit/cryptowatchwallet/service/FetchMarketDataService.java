@@ -40,13 +40,16 @@ public class FetchMarketDataService extends IntentService {
         if (intent != null) {
             Log.d("wallet", "fetch: ");
             updateDB(fetchDataFromServer());
-            if(intent.getBooleanExtra(BaseService.FLAG_REFRESH_WALLET,false))
+            Log.d("wallet", "fetch: ignore="+intent.getBooleanExtra(BaseService.EXTRA_SHOULD_IGNORE_WALLET_REFRESH,false));
+            if(!intent.getBooleanExtra(BaseService.EXTRA_SHOULD_IGNORE_WALLET_REFRESH,false))
             {
-                startService(new Intent(this,RefreshWalletService.class));
+                Intent serviceIntent=new Intent(this,RefreshWalletService.class);
+                startService(serviceIntent);
             }
             else
             {
-                Log.d("wallet", "fetch false: ");
+
+                startService(new Intent(this,UpdateWalletsWorthService.class));
             }
 
         }
