@@ -34,7 +34,7 @@
     <RelativeLayout
         android:background="?attr/colorPrimary"
         android:id="@+id/wallet_details_coin_worth_layout"
-        android:layout_weight=".8"
+        android:layout_weight=".7"
         android:layout_width="match_parent"
         android:layout_height="0dp">
 

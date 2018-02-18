@@ -10,6 +10,6 @@
 
     <padding android:bottom="@dimen/padding_top_bottom" android:top="@dimen/padding_top_bottom" android:left="@dimen/padding_left_right" android:right="@dimen/padding_left_right"></padding>
 
-    <solid android:color="#66BB6A" />
+    <solid android:color="@color/price_bg_color" />
 
 </shape>

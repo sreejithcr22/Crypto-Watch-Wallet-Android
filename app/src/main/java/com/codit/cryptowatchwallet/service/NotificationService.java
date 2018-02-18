@@ -11,9 +11,10 @@ import android.util.Log;
 
 import com.codit.cryptowatchwallet.R;
 import com.codit.cryptowatchwallet.activity.WalletDetailsActivity;
-import com.codit.cryptowatchwallet.helper.PreferenceHelper;
+import com.codit.cryptowatchwallet.manager.SharedPreferenceManager;
 import com.codit.cryptowatchwallet.model.Transaction;
 import com.codit.cryptowatchwallet.model.Wallet;
+import com.codit.cryptowatchwallet.util.Coin;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -24,7 +25,7 @@ public class NotificationService extends BaseService {
 public static final String WALLET_TITLE="wallet_title";
 public static final String NEW_TRANS_COUNT="new_trans_count";
 public static final String WALLET_BALANCE_DIFF="wallet_balance_diff";
-PreferenceHelper helper;
+SharedPreferenceManager helper;
 
 
 
@@ -36,7 +37,7 @@ PreferenceHelper helper;
         if (intent != null) {
 
             Log.d(TAG, "NotificationService: ");
-            helper=new PreferenceHelper(this);
+            helper=new SharedPreferenceManager(this);
             initializeDB();
 
             String json=helper.getNotificationQ();
@@ -86,22 +87,31 @@ PreferenceHelper helper;
             NotificationCompat.Builder builder=new NotificationCompat.Builder(this);
 
             Intent intent1=new Intent(this, WalletDetailsActivity.class);
-            intent1.putExtra(Wallet.EXTRA_WALLET_OBJECT,wallet);
+            intent1.putExtra(Wallet.EXTRA_WALLET_NAME,wallet.getDisplayName());
 
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
             stackBuilder.addParentStack(WalletDetailsActivity.class);
             stackBuilder.addNextIntent(intent1);
 
-        int id=helper.generateUniqueID();
+            int id=helper.generateUniqueID();
+            if(!balanceDiff.contains("-"))
+            {
+                balanceDiff="+"+balanceDiff;
+            }
+
             PendingIntent pendingIntent=stackBuilder.getPendingIntent(id,PendingIntent.FLAG_UPDATE_CURRENT);
 
             builder.setContentIntent(pendingIntent)
-                    .setContentText(wallet.getDisplayName())
-                    .setSubText(balanceDiff+" "+wallet.getCoinCode())
+                   .setContentText(wallet.getDisplayName()+" ("+balanceDiff+" "+wallet.getCoinCode()+")")
+                    .setSubText(Coin.getCoinName(wallet.getCoinCode())+"("+wallet.getCoinCode()+")")
                     .setContentTitle(notificationTitle)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setSound(uri)
+                    .setAutoCancel(true)
                     .addAction(new NotificationCompat.Action(R.mipmap.ic_launcher,"DETAILS",pendingIntent));
+
+
+
 
             NotificationManager manager= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 

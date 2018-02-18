@@ -8,7 +8,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,20 +26,26 @@ public class WalletDetailsActivity extends AppCompatActivity {
     private TextView coinWorthText,coinBalanceText,unconfBalanceText,totalSentText,totalReceivedText,transactionsText,unconfTransactionsText;
     private Wallet wallet;
     private Toolbar toolbar;
+    private Thread deleteWalletThread=new Thread(new Runnable() {
+        @Override
+        public void run() {
+            Handler handler=new Handler(Looper.getMainLooper());
+            WalletDao walletDao= AppDatabase.getDatabase(getApplicationContext()).walletDao();
+            int deletedCount=walletDao.deleteWallet(wallet);
+            if(deletedCount>0)handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(),"Wallet deleted !",Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet_details);
 
-        Intent intent=getIntent();
-        wallet=intent.getParcelableExtra(Wallet.EXTRA_WALLET_OBJECT);
-        if (wallet==null)
-        {
-            Toast.makeText(this,"Sorry , something went wrong !",Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
 
         //identify views
         toolbar=findViewById(R.id.toolbar);
@@ -52,18 +57,12 @@ public class WalletDetailsActivity extends AppCompatActivity {
         transactionsText=findViewById(R.id.wallet_details_transactions_text);
         unconfTransactionsText=findViewById(R.id.wallet_details_unconf_transactions_text);
 
-        toolbar.setTitle(wallet.getDisplayName());
-        toolbar.setSubtitle(Coin.getCoinName(wallet.getCoinCode())+" ("+wallet.getCoinCode()+")");
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
+        Intent intent=getIntent();
+        String walletName=intent.getStringExtra(Wallet.EXTRA_WALLET_NAME);
 
-        updateUI();
+        new FetchWallet(walletName).start();
+
+
 
 
     }
@@ -86,27 +85,12 @@ public class WalletDetailsActivity extends AppCompatActivity {
 
     private void deleteWallet()
     {
-        final Handler handler=new Handler(Looper.getMainLooper());
-        final Thread thread=new Thread(new Runnable() {
-            @Override
-            public void run() {
-                WalletDao walletDao= AppDatabase.getDatabase(getApplicationContext()).walletDao();
-                int deletedCount=walletDao.deleteWallet(wallet);
-                if(deletedCount>0)handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(),"Wallet deleted !",Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-            }
-        });
         AlertDialog.Builder builder=new AlertDialog.Builder(WalletDetailsActivity.this);
         builder.setMessage("Delete wallet '"+wallet.getDisplayName()+"' ?")
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        thread.start();
+                        deleteWalletThread.start();
                         finish();
                     }
                 })
@@ -133,7 +117,28 @@ public class WalletDetailsActivity extends AppCompatActivity {
         return false;
     }
 
-    private void updateUI() {
+    private void updateUI(Wallet wallet) {
+
+        if (wallet==null)
+        {
+            Toast.makeText(this,"Sorry , something went wrong !",Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        this.wallet=wallet;
+
+        //setup toolbar
+        toolbar.setTitle(wallet.getDisplayName());
+        toolbar.setSubtitle(Coin.getCoinName(wallet.getCoinCode())+" ("+wallet.getCoinCode()+")");
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         Balance balance=wallet.getBalance();
         coinWorthText.setText(wallet.getCoinWorth());
@@ -141,7 +146,32 @@ public class WalletDetailsActivity extends AppCompatActivity {
         unconfBalanceText.setText(balance.getUnconfirmedBalance());
         totalSentText.setText(balance.getTotalSent());
         totalReceivedText.setText(balance.getTotalReceived());
-        transactionsText.setText(String.valueOf(balance.getTransactionCount()));
-        unconfTransactionsText.setText(String.valueOf(balance.getUnConfirmedTransactionCount()));
+        transactionsText.setText((balance.getTransactionCount() != -1) ? String.valueOf(balance.getTransactionCount()) : "-");
+        unconfTransactionsText.setText((balance.getUnConfirmedTransactionCount() != -1) ? String.valueOf(balance.getUnConfirmedTransactionCount()) : "-");
+    }
+
+    private  class FetchWallet extends Thread{
+
+        String walletName;
+        Handler handler;
+
+        public FetchWallet(String walletName) {
+            this.walletName = walletName;
+            handler=new Handler(Looper.getMainLooper());
+        }
+
+
+        @Override
+        public void run() {
+
+            WalletDao walletDao = AppDatabase.getDatabase(getApplicationContext()).walletDao();
+            final Wallet wallet=walletDao.getWalletByName(walletName);
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    updateUI(wallet);
+                }
+            });
+        }
     }
 }

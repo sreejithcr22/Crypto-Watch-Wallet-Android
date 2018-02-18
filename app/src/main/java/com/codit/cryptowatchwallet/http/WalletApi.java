@@ -1,9 +1,9 @@
-package com.codit.cryptowatchwallet.api;
+package com.codit.cryptowatchwallet.http;
 
 import com.codit.cryptowatchwallet.model.BCHAddressBalance;
 import com.codit.cryptowatchwallet.model.CypherAddressBalance;
+import com.codit.cryptowatchwallet.model.RippleBalance;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Url;
@@ -19,6 +19,9 @@ public interface WalletApi {
 
     @GET
     Call<BCHAddressBalance> getBCHAddressBalance(@Url String url);
+
+    @GET
+    Call<RippleBalance> getRippleBalance(@Url String url);
 
 
 }

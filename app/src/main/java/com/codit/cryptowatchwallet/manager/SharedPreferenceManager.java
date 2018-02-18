@@ -1,4 +1,4 @@
-package com.codit.cryptowatchwallet.helper;
+package com.codit.cryptowatchwallet.manager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,10 +8,14 @@ import android.preference.PreferenceManager;
  * Created by Sreejith on 28-Nov-17.
  */
 
-public class PreferenceHelper {
+public class SharedPreferenceManager {
 
     public static final String DEFAULT_CURRENCY="default_currency";
     public static final String REFRESH_INTERVAL="refresh_interval";
+    public static final String RATE_APP = "settings_rate_us";
+    public static final String CONTACT_US = "settings_contact_us";
+    public static final String SHARE_APP = "settings_share_app";
+    public static final String DONATE = "settings_donate";
     public static final String SESSION_COUNT="session_count";
     public static boolean SESSION_COUNT_UPDATED=false;
     public  static final String UNIQUE_ID ="nitif_id";
@@ -19,9 +23,9 @@ public class PreferenceHelper {
 
     SharedPreferences preferenceManager;
 
-    public PreferenceHelper(Context context)
+    public SharedPreferenceManager(Context context)
     {
-        preferenceManager= PreferenceManager.getDefaultSharedPreferences(context);
+        preferenceManager= android.preference.PreferenceManager.getDefaultSharedPreferences(context);
 
     }
 

@@ -11,7 +11,6 @@
     <item
         android:orderInCategory="100"
         android:id="@+id/change_currency"
-        android:icon="@drawable/ic_change_currency"
         android:title="Change currency"
         app:showAsAction="always|collapseActionView"
        />

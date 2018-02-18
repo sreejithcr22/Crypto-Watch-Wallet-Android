@@ -18,13 +18,11 @@ import java.math.BigDecimal;
 public class Wallet implements Parcelable {
 
     @Ignore
-    public static final String WALLET_NAME="wallet_name";
+    public static final String EXTRA_WALLET_NAME ="wallet_name";
     @Ignore
     public static final String WALLET_ADDRESS="wallet_address";
     @Ignore
     public static final String WALLET_COIN_CODE="wallet_coin_code";
-    @Ignore
-    public static final String EXTRA_WALLET_OBJECT="wallet_object";
 
     public Wallet()
     {

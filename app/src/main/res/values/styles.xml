@@ -2,7 +2,6 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -10,10 +9,11 @@
         <item name="windowActionBar">false</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
 
-        <item name="android:textColorHint">@color/colorPrimaryDark</item>
-        <item name="colorControlNormal">@color/colorPrimaryDark</item>
+        <item name="android:textColorHint">@android:color/darker_gray</item>
+        <item name="colorControlNormal">@android:color/darker_gray</item>
         <item name="colorControlActivated">@color/colorPrimaryDark</item>
         <item name="colorControlHighlight">@color/colorPrimaryDark</item>
+        <item name="android:fontFamily">@font/quicksand_regular</item>
 
     </style>
 
@@ -22,9 +22,12 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:actionMenuTextAppearance">@style/MenuItemStyle</item>
+    </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" >
+    </style>
 
     <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">22sp</item>
@@ -47,9 +50,15 @@
     <style name="TextAppearance.AppCompat.wallet_details_label" parent="TextAppearance.AppCompat">
         <item name="android:layout_marginTop">@dimen/wallet_details_label_margin_top</item>
         <item name="android:textColor">#ffffff</item>
-        <item name="android:background">@drawable/price_green_bg</item>
+        <item name="android:background">@drawable/wallet_details_label_bg</item>
         <item name="android:fontFamily">@font/quicksand_bold</item>
         <item name="android:textSize">@dimen/wallet_details_label_text_size</item>
+
+    </style>
+
+    <style name="MenuItemStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Menu">
+        <item name="android:textSize">@dimen/toolbar_menu_item_text_size</item>
+        <item name="android:textStyle">bold</item>
 
     </style>
 

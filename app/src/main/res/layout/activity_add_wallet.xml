@@ -17,6 +17,8 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
+            app:navigationIcon="@drawable/ic_back"
+            app:titleTextAppearance="@style/Toolbar.TitleText"
             app:title="Add Wallet"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             android:id="@+id/toolbar"
@@ -30,7 +32,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:padding="@dimen/add_wallet_activity_parent_padding"
+    android:paddingLeft="@dimen/add_wallet_activity_parent_padding_left_right"
+    android:paddingRight="@dimen/add_wallet_activity_parent_padding_left_right"
+    android:paddingTop="@dimen/add_wallet_activity_parent_padding_top"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -49,7 +53,7 @@
             android:id="@+id/add_wallet_name_edittext"
             android:hint="Wallet name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="@dimen/edit_text_height" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -66,55 +70,58 @@
             android:id="@+id/add_wallet_coin_edittext"
             android:hint="Coin"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="@dimen/edit_text_height" />
 
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
-
         android:layout_marginTop="@dimen/add_wallet_activity_address_edittext_margin_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <EditText
-
             android:inputType="textMultiLine|textNoSuggestions"
             android:id="@+id/add_wallet_address_edittext"
             android:hint="Address"
             android:layout_width="match_parent"
+            android:minHeight="@dimen/edit_text_height"
             android:layout_height="wrap_content" />
 
     </android.support.design.widget.TextInputLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_marginTop="@dimen/add_wallet_address_button_layout_margin_top"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.AppCompatButton
+            android:textStyle="bold"
+            android:layout_alignParentStart="true"
+            android:fontFamily="@font/roboto_bold"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:id="@+id/button_copy_clip"
-            android:textColor="#ffffff"
-            app:backgroundTint="@color/colorPrimary"
-            android:layout_marginEnd="@dimen/add_wallet_address_buttons_margin"
-            android:layout_marginRight="@dimen/add_wallet_address_buttons_margin"
-            android:text="COPY CLIPBOARD"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent" />
+            android:textColor="@color/colorPrimary"
+            android:text="PASTE CLIPBOARD"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+
+            android:layout_alignParentLeft="true" />
 
         <android.support.v7.widget.AppCompatButton
+            android:gravity="center"
+            android:textStyle="bold"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:fontFamily="@font/roboto_bold"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
             android:id="@+id/button_scan_qr"
-            android:textColor="#ffffff"
-            app:backgroundTint="@color/colorPrimary"
-            android:layout_marginStart="@dimen/add_wallet_address_buttons_margin"
-            android:layout_marginLeft="@dimen/add_wallet_address_buttons_margin"
+            android:textColor="@color/colorPrimary"
             android:text="SCAN QR"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
 

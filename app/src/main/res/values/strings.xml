@@ -4,23 +4,16 @@
     <string name="title_market">Market</string>
     <string name="title_settings">Settings</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
 
     <!--add wallet spinner items array!-->
     <string-array name="add_wallet_spinner_items">
         <item>Bitcoin (BTC)</item>
-        <item>Ether (ETH)</item>
-        <item>BitCoin Cash (BCH)</item>
-        <item>Litecoin (LTC)</item>
+        <item>Ethereum (ETH)</item>
         <item>Ripple (XRP)</item>
-        <item>DigitalCash (DASH)</item>
+        <item>Litecoin (LTC)</item>
+        <item>BitCoin Cash (BCH)</item>
         <item>Dogecoin (DOGE)</item>
-        <item>Zcash (ZEC)</item>
-        <item>NEO (NEO)</item>
-
-
     </string-array>
+
 
 </resources>

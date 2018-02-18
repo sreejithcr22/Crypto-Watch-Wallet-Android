@@ -1,0 +1,16 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle" >
+
+    <corners
+        android:bottomLeftRadius="@dimen/wallet_details_label_bg_shape_corner_radius"
+        android:bottomRightRadius="@dimen/wallet_details_label_bg_shape_corner_radius"
+        android:topLeftRadius="@dimen/wallet_details_label_bg_shape_corner_radius"
+        android:topRightRadius="@dimen/wallet_details_label_bg_shape_corner_radius" />
+
+
+    <padding android:bottom="@dimen/wallet_details_label_bg_shape_padding_top_bottom" android:top="@dimen/wallet_details_label_bg_shape_padding_top_bottom"
+        android:left="@dimen/wallet_details_label_bg_shape_padding_left_right" android:right="@dimen/wallet_details_label_bg_shape_padding_left_right"></padding>
+
+    <solid android:color="@color/colorPrimary" />
+
+</shape>

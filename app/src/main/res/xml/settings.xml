@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="General">
+
         <Preference
             android:defaultValue="0"
             android:key="default_currency"
             android:title="Currency"
-
             ></Preference>
 
-  <Preference android:title="Refresh Interval"
-        android:key="refresh_interval"
-        android:defaultValue="1"
+        <Preference android:title="Rate us" android:key="settings_rate_us" android:summary="Rate the app on playstore"></Preference>
+        <Preference android:title="Share app" android:key="settings_share_app" android:summary="Spread the word"></Preference>
+        <Preference android:title="Feedback" android:key="settings_contact_us" android:summary="codit.apps@gmail.com"></Preference>
+        <Preference android:title="Donate" android:key="settings_donate" android:summary="Donate using crypto currency"></Preference>
 
-        ></Preference>
 
-    </PreferenceCategory>
+
+
+
 
 
 </PreferenceScreen>

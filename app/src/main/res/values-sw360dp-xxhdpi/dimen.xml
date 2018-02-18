@@ -5,11 +5,13 @@
 
 
     <!--add wallet activity!-->
-    <dimen name="add_wallet_activity_parent_padding">15dp</dimen>
-    <dimen name="add_wallet_activity_name_edittext_margin_top">16dp</dimen>
-    <dimen name="add_wallet_activity_address_edittext_margin_top">20dp</dimen>
-    <dimen name="add_wallet_address_button_layout_margin_top">20dp</dimen>
+    <dimen name="add_wallet_activity_parent_padding_left_right">25dp</dimen>
+    <dimen name="add_wallet_activity_parent_padding_top">5dp</dimen>
+    <dimen name="add_wallet_activity_name_edittext_margin_top">10dp</dimen>
+    <dimen name="add_wallet_activity_address_edittext_margin_top">10dp</dimen>
+    <dimen name="add_wallet_address_button_layout_margin_top">3dp</dimen>
     <dimen name="add_wallet_address_buttons_margin">4dp</dimen>
+    <dimen name="edit_text_height">55dp</dimen>
 
     <!--wallet list item!-->
     <dimen name="wallet_item_height">80dp</dimen>
@@ -29,7 +31,7 @@
     <!--wallet details activity!-->
     <dimen name="wallet_details_text_margin_bottom">7dp</dimen>
     <dimen name="wallet_details_text_size">17sp</dimen>
-    <dimen name="wallet_details_layout_padding_bottom">20dp</dimen>
+    <dimen name="wallet_details_layout_padding_bottom">35dp</dimen>
     <dimen name="wallet_details_coin_worth_text_size">40sp</dimen>
     <dimen name="wallet_details_label_text_size">17sp</dimen>
     <dimen name="wallet_details_label_margin_top">8dp</dimen>
@@ -38,6 +40,14 @@
     <dimen name="corner_radius">3dp</dimen>
     <dimen name="padding_top_bottom">2dp</dimen>
     <dimen name="padding_left_right">4dp</dimen>
+
+    <!--wallet_details_label_bg_shape!-->
+    <dimen name="wallet_details_label_bg_shape_corner_radius">3dp</dimen>
+    <dimen name="wallet_details_label_bg_shape_padding_top_bottom">0dp</dimen>
+    <dimen name="wallet_details_label_bg_shape_padding_left_right">4dp</dimen>
+
+    <!--toolbar menu !-->
+    <dimen name="toolbar_menu_item_text_size">18sp</dimen>
 
 
 </resources>

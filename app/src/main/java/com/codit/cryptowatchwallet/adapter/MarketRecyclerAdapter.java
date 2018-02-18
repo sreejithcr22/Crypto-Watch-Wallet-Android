@@ -11,12 +11,14 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.codit.cryptowatchwallet.R;
-import com.codit.cryptowatchwallet.helper.PreferenceHelper;
+import com.codit.cryptowatchwallet.manager.SharedPreferenceManager;
 import com.codit.cryptowatchwallet.model.CoinPrices;
 import com.codit.cryptowatchwallet.util.Coin;
 import com.codit.cryptowatchwallet.util.Currency;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -24,17 +26,17 @@ import java.util.List;
  * Created by Sreejith on 23-Nov-17.
  */
 
-public class MarketRecyclerAdapter extends RecyclerView.Adapter<MarketRecyclerAdapter.ViewHolder> implements Filterable{
+public class MarketRecyclerAdapter extends RecyclerView.Adapter<MarketRecyclerAdapter.ViewHolder> implements Filterable, Comparator<CoinPrices> {
 
     List<CoinPrices> coinPricesList=new ArrayList<>();
     List<CoinPrices> coinPricesListCopy=new ArrayList<>();
-    PreferenceHelper preferenceHelper;
+    SharedPreferenceManager sharedPreferenceManager;
 
 
     public MarketRecyclerAdapter(List<CoinPrices> coinPricesList,Context context) {
         this.coinPricesList = coinPricesList;
         this.coinPricesListCopy=coinPricesList;
-        preferenceHelper=new PreferenceHelper(context.getApplicationContext());
+        sharedPreferenceManager =new SharedPreferenceManager(context.getApplicationContext());
 
     }
 
@@ -50,7 +52,8 @@ public class MarketRecyclerAdapter extends RecyclerView.Adapter<MarketRecyclerAd
 
         String coinCode=coinPricesList.get(position).getCoinCode();
         holder.coinCode.setText(Coin.getCoinName(coinCode)+" ("+coinCode+")");
-        holder.coinPrice.setText(Currency.currencyArray[preferenceHelper.getDefaultCurrency()]+" "+String.valueOf(coinPricesList.get(position).getPrices().get(Currency.currencyArray[preferenceHelper.getDefaultCurrency()])));
+        String priceText=Currency.currencyArray[sharedPreferenceManager.getDefaultCurrency()]+" "+String.valueOf(coinPricesList.get(position).getPrices().get(Currency.currencyArray[sharedPreferenceManager.getDefaultCurrency()]));
+        holder.coinPrice.setText(priceText.contains("null") ? Coin.PRICE_NOT_AVAILABLE : priceText);
 
     }
 
@@ -66,6 +69,7 @@ public class MarketRecyclerAdapter extends RecyclerView.Adapter<MarketRecyclerAd
         for (CoinPrices prices:list) {
             coinPricesList.add(prices);
         }
+        Collections.sort(coinPricesList,this);
         this.notifyDataSetChanged();
     }
 
@@ -103,6 +107,12 @@ public class MarketRecyclerAdapter extends RecyclerView.Adapter<MarketRecyclerAd
 
             }
         };
+    }
+
+    @Override
+    public int compare(CoinPrices prices, CoinPrices t1) {
+        String currency=Currency.currencyArray[sharedPreferenceManager.getDefaultCurrency()];
+        return Double.compare(t1.getPrices().get(currency) , prices.getPrices().get(currency));
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

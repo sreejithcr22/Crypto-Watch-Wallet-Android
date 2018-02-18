@@ -1,15 +1,12 @@
 package com.codit.cryptowatchwallet.service;
 
-import android.content.Context;
 import android.content.Intent;
-import android.os.Vibrator;
 import android.util.Log;
 
-import com.codit.cryptowatchwallet.helper.PreferenceHelper;
+import com.codit.cryptowatchwallet.manager.SharedPreferenceManager;
 import com.codit.cryptowatchwallet.model.Balance;
 import com.codit.cryptowatchwallet.model.Transaction;
 import com.codit.cryptowatchwallet.model.Wallet;
-import com.codit.cryptowatchwallet.util.Currency;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
@@ -20,14 +17,14 @@ import java.util.List;
 
 public class RefreshWalletService extends BaseService {
 
-    PreferenceHelper helper;
+    SharedPreferenceManager helper;
     @Override
     protected void onHandleIntent(Intent intent) {
 
         if (intent != null)
         {
             initializeDB();
-            helper=new PreferenceHelper(this.getApplicationContext());
+            helper=new SharedPreferenceManager(this.getApplicationContext());
             Log.d("wallet", "RefreshWalletService ");
 
             int updatesCount=refreshWallets();

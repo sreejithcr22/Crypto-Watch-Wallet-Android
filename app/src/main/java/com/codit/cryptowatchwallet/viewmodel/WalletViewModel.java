@@ -29,4 +29,5 @@ public class WalletViewModel extends AndroidViewModel {
         appDatabase = AppDatabase.getDatabase(this.getApplication());
         allWalletsLive = appDatabase.walletDao().getAllWalletsLive();
     }
+
 }

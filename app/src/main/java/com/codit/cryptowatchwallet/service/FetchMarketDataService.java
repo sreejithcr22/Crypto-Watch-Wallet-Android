@@ -1,20 +1,16 @@
 package com.codit.cryptowatchwallet.service;
 
 import android.app.IntentService;
-import android.arch.persistence.room.Update;
 import android.content.Intent;
 import android.util.Log;
 
-import com.codit.cryptowatchwallet.api.MarketApi;
+import com.codit.cryptowatchwallet.http.ApiClient;
+import com.codit.cryptowatchwallet.http.MarketApi;
 import com.codit.cryptowatchwallet.model.CoinPrices;
-import com.codit.cryptowatchwallet.model.Wallet;
 import com.codit.cryptowatchwallet.orm.AppDatabase;
 import com.codit.cryptowatchwallet.orm.MarketDao;
-import com.codit.cryptowatchwallet.orm.WalletDao;
-import com.codit.cryptowatchwallet.util.Coin;
-import com.codit.cryptowatchwallet.util.Currency;
+import com.codit.cryptowatchwallet.util.UrlBuilder;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -41,6 +37,7 @@ public class FetchMarketDataService extends IntentService {
             Log.d("wallet", "fetch: ");
             updateDB(fetchDataFromServer());
             Log.d("wallet", "fetch: ignore="+intent.getBooleanExtra(BaseService.EXTRA_SHOULD_IGNORE_WALLET_REFRESH,false));
+
             if(!intent.getBooleanExtra(BaseService.EXTRA_SHOULD_IGNORE_WALLET_REFRESH,false))
             {
                 Intent serviceIntent=new Intent(this,RefreshWalletService.class);
@@ -48,7 +45,6 @@ public class FetchMarketDataService extends IntentService {
             }
             else
             {
-
                 startService(new Intent(this,UpdateWalletsWorthService.class));
             }
 
@@ -57,13 +53,11 @@ public class FetchMarketDataService extends IntentService {
 
     LinkedHashMap<String, HashMap<String, Double>>  fetchDataFromServer()
     {
-        Retrofit retrofit=new Retrofit.Builder()
-                .baseUrl("https://min-api.cryptocompare.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
+        Retrofit retrofit= ApiClient.getInstance().getMarketClient();
         MarketApi marketApi=retrofit.create(MarketApi.class);
-        Call<LinkedHashMap<String,HashMap<String,Double> >> call=marketApi.getAllCoinPrices();
+
+        Call<LinkedHashMap<String,HashMap<String,Double> >> call=marketApi.getAllCoinPrices(UrlBuilder.buildCoinList(),
+                UrlBuilder.buildCurrencyList());
         try {
             Response<LinkedHashMap<String, HashMap<String, Double>>> response=call.execute();
             if (response.isSuccessful())
@@ -74,7 +68,7 @@ public class FetchMarketDataService extends IntentService {
 
                 return null;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }

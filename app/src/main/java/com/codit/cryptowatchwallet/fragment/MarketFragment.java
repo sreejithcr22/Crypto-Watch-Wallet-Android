@@ -2,9 +2,7 @@ package com.codit.cryptowatchwallet.fragment;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,13 +14,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.Toast;
 
 import com.codit.cryptowatchwallet.R;
 import com.codit.cryptowatchwallet.adapter.MarketRecyclerAdapter;
 import com.codit.cryptowatchwallet.model.CoinPrices;
 import com.codit.cryptowatchwallet.service.BaseService;
 import com.codit.cryptowatchwallet.service.FetchMarketDataService;
+import com.codit.cryptowatchwallet.util.Connectivity;
 import com.codit.cryptowatchwallet.util.RecyclerviewSearchListener;
 import com.codit.cryptowatchwallet.viewmodel.MarketViewModel;
 
@@ -30,8 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MarketFragment extends Fragment  implements RecyclerviewSearchListener{
-
-    private OnFragmentInteractionListener mListener;
 
     RecyclerView marketRecyclerView;
     MarketRecyclerAdapter marketRecyclerAdapter;
@@ -82,7 +79,13 @@ public class MarketFragment extends Fragment  implements RecyclerviewSearchListe
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-
+                        Connectivity connectivity=new Connectivity(getContext());
+                        if(! connectivity.isConnected())
+                        {
+                            swipeRefreshLayout.setRefreshing(false);
+                            Toast.makeText(getContext(),"No internet !",Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         Intent intent=new Intent(getContext(),FetchMarketDataService.class);
                         intent.putExtra(BaseService.EXTRA_SHOULD_IGNORE_WALLET_REFRESH,true);
                         getContext().startService(intent);
@@ -108,23 +111,6 @@ public class MarketFragment extends Fragment  implements RecyclerviewSearchListe
         });
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        /*if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }*/
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
 
     public void onSearch(String searchString) {
         marketRecyclerAdapter.getFilter().filter(searchString);
@@ -137,8 +123,5 @@ public class MarketFragment extends Fragment  implements RecyclerviewSearchListe
     }
 
 
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
+
 }
