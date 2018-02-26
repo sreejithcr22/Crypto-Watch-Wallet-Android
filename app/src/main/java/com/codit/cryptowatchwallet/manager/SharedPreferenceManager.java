@@ -16,6 +16,7 @@ public class SharedPreferenceManager {
     public static final String CONTACT_US = "settings_contact_us";
     public static final String SHARE_APP = "settings_share_app";
     public static final String DONATE = "settings_donate";
+    public static final String CREDITS = "settings_credits";
     public static final String SESSION_COUNT="session_count";
     public static boolean SESSION_COUNT_UPDATED=false;
     public  static final String UNIQUE_ID ="nitif_id";

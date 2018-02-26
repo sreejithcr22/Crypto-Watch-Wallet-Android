@@ -3,6 +3,9 @@
     <string name="title_wallets">Wallets</string>
     <string name="title_market">Coins</string>
     <string name="title_settings">Settings</string>
+    <string name="credits">
+        Icons - \nhttps://www.flaticon.com\n\nAPI - \nhttps://www.cryptocompare.com\nhttps://www.blockcypher.com
+    </string>
 
 
     <!--add wallet spinner items array!-->
@@ -12,6 +15,7 @@
         <item>Ripple (XRP)</item>
         <item>Litecoin (LTC)</item>
         <item>BitCoin Cash (BCH)</item>
+        <item>Dash (DASH)</item>
         <item>Dogecoin (DOGE)</item>
     </string-array>
 

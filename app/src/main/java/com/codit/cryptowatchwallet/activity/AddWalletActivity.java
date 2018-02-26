@@ -180,9 +180,6 @@ public class AddWalletActivity extends AppCompatActivity implements View.OnClick
         } else if (addressInput.getText().toString().trim().contains(" ")) {
             addressInput.setError("Address cannot contain whitespaces");
             return false;
-        } else if (m.find()) {
-            addressInput.setError("Address cannot contain special characters");
-            return false;
         }
         return true;
     }

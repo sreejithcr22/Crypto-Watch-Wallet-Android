@@ -27,7 +27,7 @@ import java.util.Map;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
     SharedPreferenceManager helper;
-    Preference defaultCurrency, rateUs, shareApp, contactUs, donate;
+    Preference defaultCurrency, rateUs, shareApp, contactUs, donate, credits;
     onCurrencyPreferenceClickListener listener;
 
     @Override
@@ -49,6 +49,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             case SharedPreferenceManager.DONATE:
                 showDonationDialog();
                 return true;
+
+            case SharedPreferenceManager.CREDITS:
+                showCreditsDialog();
+                return true;
         }
         return false;
     }
@@ -66,6 +70,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         shareApp = getPreferenceManager().findPreference(SharedPreferenceManager.SHARE_APP);
         contactUs = getPreferenceManager().findPreference(SharedPreferenceManager.CONTACT_US);
         donate = getPreferenceManager().findPreference(SharedPreferenceManager.DONATE);
+        credits = getPreferenceManager().findPreference(SharedPreferenceManager.CREDITS);
 
 
         defaultCurrency.setOnPreferenceClickListener(this);
@@ -73,6 +78,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         shareApp.setOnPreferenceClickListener(this);
         contactUs.setOnPreferenceClickListener(this);
         donate.setOnPreferenceClickListener(this);
+        credits.setOnPreferenceClickListener(this);
 
         intiSummaries();
 
@@ -169,6 +175,15 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             Toast.makeText(getActivity().getApplicationContext(), "Address could not be copied !", Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    private void showCreditsDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Credits")
+                .setMessage(getResources().getString(R.string.credits))
+                .setPositiveButton("Ok",null)
+                .create()
+                .show();
     }
 
     public interface onCurrencyPreferenceClickListener {

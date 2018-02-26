@@ -3,6 +3,7 @@ package com.codit.cryptowatchwallet.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -11,6 +12,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -81,6 +84,36 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
         setSupportActionBar(toolbar);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new WalletFragment(), FRAGMENT_WALLET).commit();
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int density = metrics.densityDpi;
+
+
+        String densityString = "cannot determine";
+        if (density == DisplayMetrics.DENSITY_XXHIGH) {
+
+            densityString = "xxhdpi";
+        } else if (density == DisplayMetrics.DENSITY_XHIGH) {
+            densityString = "xhdpi";
+
+        } else if (density == DisplayMetrics.DENSITY_HIGH) {
+            densityString = "hdpi";
+
+        } else if (density == DisplayMetrics.DENSITY_MEDIUM) {
+
+            densityString = "mdpi";
+        } else if (density == DisplayMetrics.DENSITY_LOW) {
+
+            densityString = "ldpi";
+        }
+
+
+        Configuration config = getResources().getConfiguration();
+
+        Log.d("dimens", "density= "+densityString);
+        Log.d("dimens", "small width= "+String.valueOf(config.smallestScreenWidthDp));
+        Log.d("dimens", "width x height "+String.valueOf(metrics.widthPixels)+ " x "+String.valueOf(metrics.heightPixels));
 
     }
 
