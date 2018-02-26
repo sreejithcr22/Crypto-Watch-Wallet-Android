@@ -29,8 +29,8 @@ public class SharedPreferenceManager {
 
     }
 
-    public void setDefaultCurrency(int arrayPos){preferenceManager.edit().putInt(DEFAULT_CURRENCY,arrayPos).apply();}
-    public int getDefaultCurrency(){return preferenceManager.getInt(DEFAULT_CURRENCY,0);}
+    public void setDefaultCurrency(String currency){preferenceManager.edit().putString(DEFAULT_CURRENCY,currency).apply();}
+    public String getDefaultCurrency(){return preferenceManager.getString(DEFAULT_CURRENCY,"USD");}
     public void setSessionCount(int sessionCount){preferenceManager.edit().putInt(SESSION_COUNT,sessionCount).apply();}
     public int getSessionCount(){return preferenceManager.getInt(SESSION_COUNT,0);}
     private int getUniqueID() {return preferenceManager.getInt(UNIQUE_ID,1);}

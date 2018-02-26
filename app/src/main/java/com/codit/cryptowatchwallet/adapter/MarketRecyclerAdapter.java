@@ -52,7 +52,7 @@ public class MarketRecyclerAdapter extends RecyclerView.Adapter<MarketRecyclerAd
 
         String coinCode=coinPricesList.get(position).getCoinCode();
         holder.coinCode.setText(Coin.getCoinName(coinCode)+" ("+coinCode+")");
-        String priceText=Currency.currencyArray[sharedPreferenceManager.getDefaultCurrency()]+" "+String.valueOf(coinPricesList.get(position).getPrices().get(Currency.currencyArray[sharedPreferenceManager.getDefaultCurrency()]));
+        String priceText=sharedPreferenceManager.getDefaultCurrency()+" "+String.valueOf(coinPricesList.get(position).getPrices().get(sharedPreferenceManager.getDefaultCurrency()));
         holder.coinPrice.setText(priceText.contains("null") ? Coin.PRICE_NOT_AVAILABLE : priceText);
 
     }
@@ -111,8 +111,12 @@ public class MarketRecyclerAdapter extends RecyclerView.Adapter<MarketRecyclerAd
 
     @Override
     public int compare(CoinPrices prices, CoinPrices t1) {
-        String currency=Currency.currencyArray[sharedPreferenceManager.getDefaultCurrency()];
-        return Double.compare(t1.getPrices().get(currency) , prices.getPrices().get(currency));
+        String currency=sharedPreferenceManager.getDefaultCurrency();
+        try
+        {
+            return Double.compare(t1.getPrices().get(currency) , prices.getPrices().get(currency));
+        }
+        catch (Exception e) {return 0;}
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

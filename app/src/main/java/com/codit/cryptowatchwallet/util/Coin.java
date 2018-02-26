@@ -36,7 +36,48 @@ public class Coin {
         coinsData.put("XEM","NEM");
         coinsData.put("XMR","Monero");
         coinsData.put("LSK","LISK");
-        coinsData.put("DOGE","Doge coin");
+        coinsData.put("ETC","Ethereum Classic");
+        coinsData.put("VEN","Ve Chain");
+        coinsData.put("TRX","TRON");
+        coinsData.put("BTG","Bitcoin Gold");
+        coinsData.put("USDT","Tether");
+        coinsData.put("OMG","OmiseGO");
+        coinsData.put("ICX","ICON");
+        coinsData.put("ZEC","Zcash");
+        coinsData.put("XVG","Verge");
+        coinsData.put("BCN","Bytecoin");
+        coinsData.put("PPT","Populous");
+        coinsData.put("STRAT","Stratis");
+        coinsData.put("RHOC","RChain");
+        coinsData.put("SC","Siacoin");
+        coinsData.put("WAVES","Waves");
+        coinsData.put("SNT","Status");
+        coinsData.put("MKR","Maker");
+        coinsData.put("BTS","BitShares");
+        coinsData.put("VERI","Veritaseum");
+        coinsData.put("AE","Aeternity");
+        coinsData.put("WTC","Waltonchain");
+        coinsData.put("ZCL","ZClassic");
+        coinsData.put("DCR","Decred");
+        coinsData.put("REP","Augur");
+        coinsData.put("DGD","DigixDAO");
+        coinsData.put("ARDR","Ardor");
+        coinsData.put("HSR","Hshare");
+        coinsData.put("ETN","Electroneum");
+        coinsData.put("KMD","Komodo");
+        coinsData.put("GAS","Gas");
+        coinsData.put("ARK","Ark");
+        coinsData.put("BTX","Bitcore");
+        coinsData.put("VTC","Vertcoin");
+        coinsData.put("DOGE","DogeCoin");
+
+
+
+
+
+
+
+
 
     }
 

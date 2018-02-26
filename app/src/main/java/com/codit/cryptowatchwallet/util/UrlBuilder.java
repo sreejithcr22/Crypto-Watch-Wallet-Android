@@ -21,10 +21,11 @@ public class UrlBuilder {
         return coinList.toString();
     }
 
-    public static String buildCurrencyList()
+    public static String buildCurrencyList(String currencyArray[])
     {
+        Log.d("url", "buildCurrencyList: "+currencyArray.length);
         StringBuffer currencyList=new StringBuffer();
-        for (String currency:Currency.currencyArray) {
+        for (String currency:currencyArray) {
             currencyList.append(currency+",");
         }
         currencyList.setLength(currencyList.length()-1);

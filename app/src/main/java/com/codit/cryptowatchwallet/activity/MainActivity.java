@@ -6,6 +6,7 @@ import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.content.res.TypedArrayUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -21,6 +22,8 @@ import com.codit.cryptowatchwallet.manager.SharedPreferenceManager;
 import com.codit.cryptowatchwallet.service.UpdateWalletsWorthService;
 import com.codit.cryptowatchwallet.util.Currency;
 import com.codit.cryptowatchwallet.util.UrlBuilder;
+
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity implements SettingsFragment.onCurrencyPreferenceClickListener {
 
@@ -68,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        UrlBuilder.buildCurrencyList();
 
         sharedPreferenceManager = new SharedPreferenceManager(getApplicationContext());
 
@@ -101,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
 
 
         currency=menu.findItem(R.id.change_currency);
-        currency.setTitle(Currency.currencyArray[sharedPreferenceManager.getDefaultCurrency()]);
+        currency.setTitle(sharedPreferenceManager.getDefaultCurrency());
 
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -135,16 +137,17 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
 
 
     void showChangeCurrencyDialog() {
+        final String currencies[]=getApplicationContext().getResources().getStringArray(R.array.currencies);
+        Arrays.sort(currencies);
         final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle("Change currency")
-                .setSingleChoiceItems(Currency.currencyArray, sharedPreferenceManager.getDefaultCurrency(), new DialogInterface.OnClickListener() {
+                .setSingleChoiceItems(currencies, Arrays.binarySearch(currencies,sharedPreferenceManager.getDefaultCurrency()), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        sharedPreferenceManager.setDefaultCurrency(i);
-                        currency.setTitle(Currency.currencyArray[sharedPreferenceManager.getDefaultCurrency()]);
+                        sharedPreferenceManager.setDefaultCurrency(currencies[i]);
+                        currency.setTitle(sharedPreferenceManager.getDefaultCurrency());
                         dialogInterface.dismiss();
                         Intent intent = new Intent(MainActivity.this, UpdateWalletsWorthService.class);
-                        intent.putExtra(Currency.EXTRA_DATA_CURRENCY_CODE, Currency.currencyArray[i]);
                         startService(intent);
                         marketFragment = (MarketFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_MARKET);
                         if (marketFragment != null && marketFragment.isVisible()) {
@@ -152,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
                         }
                     }
                 });
+
         builder.setNegativeButton("Cancel", null)
                 .create().show();
     }

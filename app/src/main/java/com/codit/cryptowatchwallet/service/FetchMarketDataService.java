@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
+import com.codit.cryptowatchwallet.R;
 import com.codit.cryptowatchwallet.http.ApiClient;
 import com.codit.cryptowatchwallet.http.MarketApi;
 import com.codit.cryptowatchwallet.model.CoinPrices;
@@ -57,8 +58,9 @@ public class FetchMarketDataService extends IntentService {
         MarketApi marketApi=retrofit.create(MarketApi.class);
 
         Call<LinkedHashMap<String,HashMap<String,Double> >> call=marketApi.getAllCoinPrices(UrlBuilder.buildCoinList(),
-                UrlBuilder.buildCurrencyList());
+                UrlBuilder.buildCurrencyList(getApplicationContext().getResources().getStringArray(R.array.currencies)));
         try {
+
             Response<LinkedHashMap<String, HashMap<String, Double>>> response=call.execute();
             if (response.isSuccessful())
             {

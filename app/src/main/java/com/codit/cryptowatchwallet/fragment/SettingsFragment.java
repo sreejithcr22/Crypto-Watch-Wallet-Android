@@ -98,7 +98,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     }
 
     private void intiSummaries() {
-        defaultCurrency.setSummary(Currency.currencyArray[helper.getDefaultCurrency()]);
+        defaultCurrency.setSummary(helper.getDefaultCurrency());
 
     }
 
@@ -106,7 +106,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         switch (s) {
             case SharedPreferenceManager.DEFAULT_CURRENCY:
-                defaultCurrency.setSummary(Currency.currencyArray[helper.getDefaultCurrency()]);
+                defaultCurrency.setSummary(helper.getDefaultCurrency());
                 break;
         }
     }

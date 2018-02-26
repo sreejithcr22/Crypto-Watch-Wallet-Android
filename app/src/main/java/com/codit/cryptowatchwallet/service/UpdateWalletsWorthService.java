@@ -21,7 +21,7 @@ public class UpdateWalletsWorthService extends BaseService {
             helper=new SharedPreferenceManager(this);
             Log.d("wallet", "UpdateWalletsWorthService ");
             initializeDB();
-            String currencyCode=Currency.currencyArray[helper.getDefaultCurrency()];
+            String currencyCode=helper.getDefaultCurrency();
             Boolean startNotificationService=intent.getBooleanExtra(BaseService.EXTRA_SHOULD_START_NOTIFICATION,false);
             if(currencyCode!=null)
             {

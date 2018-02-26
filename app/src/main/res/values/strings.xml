@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Crypto Watch Wallet</string>
     <string name="title_wallets">Wallets</string>
-    <string name="title_market">Market</string>
+    <string name="title_market">Coins</string>
     <string name="title_settings">Settings</string>
 
 
@@ -13,6 +13,95 @@
         <item>Litecoin (LTC)</item>
         <item>BitCoin Cash (BCH)</item>
         <item>Dogecoin (DOGE)</item>
+    </string-array>
+
+
+    <!--currencies !-->
+    <string-array name="currencies">
+        <item>USD</item>
+        <item>EUR</item>
+        <item>CNY</item>
+        <item>GBP</item>
+        <item>JPY</item>
+        <item>PLN</item>
+        <item>RUB</item>
+        <item>SGD</item>
+        <item>AUD</item>
+        <item>HKD</item>
+        <item>CHF</item>
+        <item>INR</item>
+        <item>NZD</item>
+        <item>BRL</item>
+        <item>SEK</item>
+        <item>PHP</item>
+        <item>THB</item>
+        <item>VND</item>
+        <item>CZK</item>
+        <item>ZAR</item>
+        <item>KWD</item>
+        <item>ZMW</item>
+        <item>AED</item>
+        <item>KRW</item>
+        <item>CUC</item>
+
+
+<!--
+        <item>KHR</item>
+        <item>TRY</item>
+        <item>BHD</item>
+        <item>RUR</item>
+        <item>BGN</item>
+        <item>IRR</item>
+        <item>KES</item>
+        <item>GHS</item>
+        <item>DOP</item>
+        <item>OMR</item>
+        <item>PYG</item>
+
+
+        <item>DZD</item>
+        <item>CUC</item>
+        <item>ZMW</item>
+        <item>AMD</item>
+        <item>TND</item>
+        <item>NAD</item>
+        <item>VUV</item>
+        <item>QAR</item>
+        <item>DASH</item>
+        <item>BYN</item>
+        <item>GEL</item>
+        <item>EGP</item>
+
+         <item>AZN</item>
+
+!-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     </string-array>
 
 

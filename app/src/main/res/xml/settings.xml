@@ -12,6 +12,8 @@
         <Preference android:title="Share app" android:key="settings_share_app" android:summary="Spread the word"></Preference>
         <Preference android:title="Feedback" android:key="settings_contact_us" android:summary="codit.apps@gmail.com"></Preference>
         <Preference android:title="Donate" android:key="settings_donate" android:summary="Donate using crypto currency"></Preference>
+        <Preference android:title="Credits" android:key="settings_credits" ></Preference>
+
 
 
 
