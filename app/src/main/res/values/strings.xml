@@ -19,6 +19,12 @@
         <item>Dogecoin (DOGE)</item>
     </string-array>
 
+    <!--paper wallet addresses!-->
+    <string name="bitcoin_address">1LnHWzy3sDttuPVHLQKrUyx3AasFo3ijyM</string>
+    <string name="eth_address">0x824Ac06208eFA740B91FBD75cE03Ef15790cA90E</string>
+    <string name="lite_address">LNVHbZPLgVMxjM4SFUzTsCpGJEWGUuphyx</string>
+    <string name="ripple_address">rGXUvxM2cTWkXCdAUFgexWwYuc546BBhgD</string>
+
 
     <!--currencies !-->
     <string-array name="currencies">

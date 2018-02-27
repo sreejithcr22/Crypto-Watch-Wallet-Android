@@ -105,7 +105,7 @@ SharedPreferenceManager helper;
                    .setContentText(wallet.getDisplayName()+" ("+balanceDiff+" "+wallet.getCoinCode()+")")
                     .setSubText(Coin.getCoinName(wallet.getCoinCode())+"("+wallet.getCoinCode()+")")
                     .setContentTitle(notificationTitle)
-                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setSmallIcon(R.drawable.ic_notification)
                     .setSound(uri)
                     .setAutoCancel(true)
                     .addAction(new NotificationCompat.Action(R.mipmap.ic_launcher,"DETAILS",pendingIntent));

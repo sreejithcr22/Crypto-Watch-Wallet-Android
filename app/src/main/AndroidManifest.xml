@@ -20,7 +20,8 @@
 
         <activity
             android:name=".activity.MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -46,14 +47,18 @@
             android:name=".service.RefreshWalletService"
             android:exported="false" />
 
-        <activity android:name=".activity.AddWalletActivity" />
+        <activity
+            android:name=".activity.AddWalletActivity"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".service.NotificationService"
             android:exported="false" />
 
-        <activity android:name=".activity.WalletDetailsActivity"
-            android:parentActivityName=".activity.MainActivity">
+        <activity
+            android:name=".activity.WalletDetailsActivity"
+            android:parentActivityName=".activity.MainActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity"></meta-data>

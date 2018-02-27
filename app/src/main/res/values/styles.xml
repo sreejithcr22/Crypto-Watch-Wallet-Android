@@ -26,8 +26,7 @@
         <item name="android:actionMenuTextAppearance">@style/MenuItemStyle</item>
     </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" >
-    </style>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"></style>
 
     <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">@dimen/toolbar_title_text_size</item>
@@ -37,9 +36,9 @@
     </style>
 
     <style name="Toolbar.SubTitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-    <item name="android:textSize">@dimen/toolbar_sub_title_text_size</item>
-    <item name="android:fontFamily">@font/quicksand_regular</item>
-    <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">@dimen/toolbar_sub_title_text_size</item>
+        <item name="android:fontFamily">@font/quicksand_regular</item>
+        <item name="android:textColor">#ffffff</item>
     </style>
 
     <style name="TextAppearance.AppCompat.price_text" parent="TextAppearance.AppCompat">

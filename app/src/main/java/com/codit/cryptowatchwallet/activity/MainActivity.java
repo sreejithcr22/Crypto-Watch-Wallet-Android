@@ -2,12 +2,10 @@ package com.codit.cryptowatchwallet.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.content.res.TypedArrayUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -23,8 +21,6 @@ import com.codit.cryptowatchwallet.fragment.SettingsFragment;
 import com.codit.cryptowatchwallet.fragment.WalletFragment;
 import com.codit.cryptowatchwallet.manager.SharedPreferenceManager;
 import com.codit.cryptowatchwallet.service.UpdateWalletsWorthService;
-import com.codit.cryptowatchwallet.util.Currency;
-import com.codit.cryptowatchwallet.util.UrlBuilder;
 
 import java.util.Arrays;
 
@@ -111,9 +107,9 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
 
         Configuration config = getResources().getConfiguration();
 
-        Log.d("dimens", "density= "+densityString);
-        Log.d("dimens", "small width= "+String.valueOf(config.smallestScreenWidthDp));
-        Log.d("dimens", "width x height "+String.valueOf(metrics.widthPixels)+ " x "+String.valueOf(metrics.heightPixels));
+        Log.d("dimens", "density= " + densityString);
+        Log.d("dimens", "small width= " + String.valueOf(config.smallestScreenWidthDp));
+        Log.d("dimens", "width x height " + String.valueOf(metrics.widthPixels) + " x " + String.valueOf(metrics.heightPixels));
 
     }
 
@@ -135,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
 
 
-        currency=menu.findItem(R.id.change_currency);
+        currency = menu.findItem(R.id.change_currency);
         currency.setTitle(sharedPreferenceManager.getDefaultCurrency());
 
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
@@ -170,11 +166,11 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
 
 
     void showChangeCurrencyDialog() {
-        final String currencies[]=getApplicationContext().getResources().getStringArray(R.array.currencies);
+        final String currencies[] = getApplicationContext().getResources().getStringArray(R.array.currencies);
         Arrays.sort(currencies);
         final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle("Change currency")
-                .setSingleChoiceItems(currencies, Arrays.binarySearch(currencies,sharedPreferenceManager.getDefaultCurrency()), new DialogInterface.OnClickListener() {
+                .setSingleChoiceItems(currencies, Arrays.binarySearch(currencies, sharedPreferenceManager.getDefaultCurrency()), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         sharedPreferenceManager.setDefaultCurrency(currencies[i]);

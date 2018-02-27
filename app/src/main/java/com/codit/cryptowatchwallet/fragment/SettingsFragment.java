@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.codit.cryptowatchwallet.R;
 import com.codit.cryptowatchwallet.manager.SharedPreferenceManager;
-import com.codit.cryptowatchwallet.util.Currency;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -138,12 +137,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     }
 
     private void showDonationDialog() {
-        //TODO : change addresses
         final LinkedHashMap<String, String> addressesMap = new LinkedHashMap<>();
-        addressesMap.put("Bitcoin", "12dfsdngiudngiwungiwur56457468568kdjnkdjvnksdjnvzdjvnsjdvnet");
-        addressesMap.put("Litecoin", "335235sjfnjdsngksjdngksjdgnksjdnsjdgnfsdhdtherh");
-        addressesMap.put("Ripple", "24634263735858sdgdfhery5735735846dgh");
-        addressesMap.put("Ethereum", "sfdgsdhsrheretjdgjdgkfryk");
+        addressesMap.put("Bitcoin", getString(R.string.bitcoin_address));
+        addressesMap.put("Litecoin", getString(R.string.lite_address));
+        addressesMap.put("Ripple", getString(R.string.ripple_address));
+        addressesMap.put("Ethereum", getString(R.string.eth_address));
         final String[] currencies = new String[addressesMap.size()], addresses = new String[addressesMap.size()];
         int i = 0;
         for (Map.Entry<String, String> entry : addressesMap.entrySet()) {

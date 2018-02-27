@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="fab_margin">35dp</dimen>
+
+
+    <!--add wallet activity!-->
+    <dimen name="add_wallet_activity_parent_padding_left_right">27dp</dimen>
+    <dimen name="add_wallet_activity_parent_padding_top">7dp</dimen>
+    <dimen name="add_wallet_activity_name_edittext_margin_top">12dp</dimen>
+    <dimen name="add_wallet_activity_address_edittext_margin_top">10dp</dimen>
+    <dimen name="add_wallet_address_button_layout_margin_top">3dp</dimen>
+    <dimen name="add_wallet_address_buttons_margin">4dp</dimen>
+    <dimen name="edit_text_height">60dp</dimen>
+
+    <!--wallet list item!-->
+    <dimen name="wallet_item_height">90dp</dimen>
+    <dimen name="wallet_item_left_right_margin">22dp</dimen>
+    <dimen name="wallet_item_top_bottom_padding">5dp</dimen>
+    <dimen name="wallet_list_item_name_text_size">23sp</dimen>
+    <dimen name="wallet_list_item_label_text_size">16sp</dimen>
+    <dimen name="wallet_list_item_coin_code_margin_top">8dp</dimen>
+    <dimen name="wallet_list_item_price_text_size">17sp</dimen>
+
+    <!--market list item!-->
+    <dimen name="market_list_item_height">80dp</dimen>
+    <dimen name="market_list_item_coin_name_text_size">20sp</dimen>
+    <dimen name="market_list_item_price_text_size">17.5sp</dimen>
+
+
+    <!--wallet details activity!-->
+    <dimen name="wallet_details_text_margin_bottom">8dp</dimen>
+    <dimen name="wallet_details_text_size">24sp</dimen>
+    <dimen name="wallet_details_layout_padding_bottom">45dp</dimen>
+    <dimen name="wallet_details_coin_worth_text_size">45sp</dimen>
+    <dimen name="wallet_details_label_text_size">19sp</dimen>
+    <dimen name="wallet_details_label_margin_top">8dp</dimen>
+
+    <!--text_bg_shape!-->
+    <dimen name="corner_radius">3dp</dimen>
+    <dimen name="padding_top_bottom">2dp</dimen>
+    <dimen name="padding_left_right">4dp</dimen>
+
+    <!--wallet_details_label_bg_shape!-->
+    <dimen name="wallet_details_label_bg_shape_corner_radius">5dp</dimen>
+    <dimen name="wallet_details_label_bg_shape_padding_top_bottom">0dp</dimen>
+    <dimen name="wallet_details_label_bg_shape_padding_left_right">8dp</dimen>
+
+    <!--toolbar menu !-->
+    <dimen name="toolbar_menu_item_text_size">25sp</dimen>
+
+    <dimen name="bottom_nav_height">70dp</dimen>
+    <dimen name="toolbar_title_text_size">27sp</dimen>
+    <dimen name="toolbar_sub_title_text_size">18sp</dimen>
+
+
+</resources>
