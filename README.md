@@ -21,8 +21,7 @@ https://ripple.com/build/data-api-v2/ ,
 https://blockdozer.com/insight/api
 
 
-Google play store link- https://play.google.com/store/apps/details?id=com.codit.cryptowatchwallet
-
+<a href='https://play.google.com/store/apps/details?id=com.codit.cryptowatchwallet&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
 
 
 
