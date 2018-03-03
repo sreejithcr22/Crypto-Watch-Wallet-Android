@@ -6,13 +6,20 @@ Also see live prices of more than 50 popular crypto currencies.
 The users can see the wallets current worth in 25 different fiat currencies including USD, EUR, GBP, JPY, INR, KRW and more.
 
 The app supports the following coins: -
-Bitcoin
-Bitcoin Cash
-Ethereum
-Litecoin
-Ripple
-Dash
+Bitcoin,
+Bitcoin Cash,
+Ethereum,
+Litecoin,
+Ripple,
+Dash,
 Dogecoin
+
+The app uses the following APIs for data
+https://www.cryptocompare.com/api/# ,
+https://www.blockcypher.com/dev/bitcoin/ ,
+https://ripple.com/build/data-api-v2/ ,
+https://blockdozer.com/insight/api
+
 
 Google play store link- https://play.google.com/store/apps/details?id=com.codit.cryptowatchwallet
 
