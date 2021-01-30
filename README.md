@@ -25,11 +25,3 @@ https://blockdozer.com/insight/api
 
 
 Repo owner : sreejithcr2@gmail.com
-
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2UTJVYDFW5QRG)
-
-Donate using -
-Bitcoin:1LnHWzy3sDttuPVHLQKrUyx3AasFo3ijyM ,
-Ethereum:0x824Ac06208eFA740B91FBD75cE03Ef15790cA90E ,
-Litecoin:LNVHbZPLgVMxjM4SFUzTsCpGJEWGUuphyx,
-Ripple:rGXUvxM2cTWkXCdAUFgexWwYuc546BBhgD
