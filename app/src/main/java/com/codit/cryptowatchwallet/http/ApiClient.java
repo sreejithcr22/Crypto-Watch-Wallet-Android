@@ -12,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
-    private static final int CONNECTION_TIME_OUT=20;
+    private static final int CONNECTION_TIME_OUT=60;
     private final static String BASE_URL_BLOCKCYPHER="https://api.blockcypher.com/v1/";
     private static final String BASE_URL_MARKET="https://min-api.cryptocompare.com/";
 
