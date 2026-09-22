@@ -1,9 +1,9 @@
 package com.codit.cryptowatchwallet.viewmodel;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.annotation.NonNull;
 
 import com.codit.cryptowatchwallet.model.CoinPrices;
 import com.codit.cryptowatchwallet.model.Wallet;

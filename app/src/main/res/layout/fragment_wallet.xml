@@ -1,5 +1,5 @@
 
-<android.support.v4.widget.SwipeRefreshLayout
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/swiperefresh"
     android:layout_width="match_parent"
@@ -23,13 +23,13 @@
             android:orientation="vertical"
             >
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/wallet_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
 
-            </android.support.v7.widget.RecyclerView>
+            </androidx.recyclerview.widget.RecyclerView>
 
             <View
                 android:layout_width="match_parent"
@@ -42,7 +42,7 @@
 
     </ScrollView>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_wallet_fab"
         app:fabSize="normal"
        android:layout_margin="@dimen/fab_margin"
@@ -54,4 +54,4 @@
         />
 
 </FrameLayout>
-</android.support.v4.widget.SwipeRefreshLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

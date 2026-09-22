@@ -2,7 +2,7 @@ package com.codit.cryptowatchwallet.manager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 
 /**
  * Created by Sreejith on 28-Nov-17.
@@ -26,7 +26,7 @@ public class SharedPreferenceManager {
 
     public SharedPreferenceManager(Context context)
     {
-        preferenceManager= android.preference.PreferenceManager.getDefaultSharedPreferences(context);
+        preferenceManager= androidx.preference.PreferenceManager.getDefaultSharedPreferences(context);
 
     }
 
