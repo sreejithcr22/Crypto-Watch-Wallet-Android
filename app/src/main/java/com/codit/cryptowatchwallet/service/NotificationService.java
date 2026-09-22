@@ -5,8 +5,8 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.TaskStackBuilder;
 import android.util.Log;
 
 import com.codit.cryptowatchwallet.R;
@@ -117,6 +117,7 @@ SharedPreferenceManager helper;
 
         Log.d(TAG, "Notification id= "+String.valueOf(id));
             manager.notify(id,builder.build());
+            }
     }
 
 }

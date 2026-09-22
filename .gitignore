@@ -2,6 +2,11 @@
 local.properties
 # API keys (never commit - see apikeys.properties.example)
 apikeys.properties
+# Release signing (never commit)
+keystore.properties
+keystore/
+*.jks
+*.keystore
 # Gradle / build outputs
 .gradle/
 build/
