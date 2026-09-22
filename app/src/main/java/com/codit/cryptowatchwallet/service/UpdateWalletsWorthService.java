@@ -8,6 +8,7 @@ import com.codit.cryptowatchwallet.model.Wallet;
 
 import com.codit.cryptowatchwallet.util.Coin;
 import com.codit.cryptowatchwallet.util.Currency;
+import com.codit.cryptowatchwallet.util.ServiceStarter;
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class UpdateWalletsWorthService extends BaseService {
 
                 if(startNotificationService)
                 {
-                    startService(new Intent(this,NotificationService.class));
+                    ServiceStarter.start(this, new Intent(this,NotificationService.class));
                 }
             }
         }

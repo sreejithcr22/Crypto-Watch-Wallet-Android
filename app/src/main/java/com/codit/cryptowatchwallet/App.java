@@ -7,6 +7,7 @@ import android.util.Log;
 import com.codit.cryptowatchwallet.manager.SharedPreferenceManager;
 import com.codit.cryptowatchwallet.receiver.ScheduleAlarm;
 import com.codit.cryptowatchwallet.service.FetchMarketDataService;
+import com.codit.cryptowatchwallet.util.ServiceStarter;
 
 /**
  * Created by Sreejith on 18-Feb-18.
@@ -31,7 +32,7 @@ public class App extends Application {
         }
         sharedPreferenceManager.setSessionCount(sharedPreferenceManager.getSessionCount() + 1);
         Intent intent = new Intent(this, FetchMarketDataService.class);
-        startService(intent);
+        ServiceStarter.start(this, intent);
 
        /* if (!SharedPreferenceManager.SESSION_COUNT_UPDATED) {
 

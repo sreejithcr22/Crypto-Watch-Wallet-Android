@@ -11,6 +11,7 @@ import com.codit.cryptowatchwallet.http.MarketApi;
 import com.codit.cryptowatchwallet.model.CoinPrices;
 import com.codit.cryptowatchwallet.orm.AppDatabase;
 import com.codit.cryptowatchwallet.orm.MarketDao;
+import com.codit.cryptowatchwallet.util.ServiceStarter;
 import com.codit.cryptowatchwallet.util.UrlBuilder;
 
 import java.util.ArrayList;
@@ -43,11 +44,11 @@ public class FetchMarketDataService extends IntentService {
             if(!intent.getBooleanExtra(BaseService.EXTRA_SHOULD_IGNORE_WALLET_REFRESH,false))
             {
                 Intent serviceIntent=new Intent(this,RefreshWalletService.class);
-                startService(serviceIntent);
+                ServiceStarter.start(this, serviceIntent);
             }
             else
             {
-                startService(new Intent(this,UpdateWalletsWorthService.class));
+                ServiceStarter.start(this, new Intent(this,UpdateWalletsWorthService.class));
             }
 
         }

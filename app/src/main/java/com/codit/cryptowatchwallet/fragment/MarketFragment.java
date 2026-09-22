@@ -23,6 +23,7 @@ import com.codit.cryptowatchwallet.service.BaseService;
 import com.codit.cryptowatchwallet.service.FetchMarketDataService;
 import com.codit.cryptowatchwallet.util.Connectivity;
 import com.codit.cryptowatchwallet.util.RecyclerviewSearchListener;
+import com.codit.cryptowatchwallet.util.ServiceStarter;
 import com.codit.cryptowatchwallet.viewmodel.MarketViewModel;
 
 import java.util.ArrayList;
@@ -88,7 +89,7 @@ public class MarketFragment extends Fragment  implements RecyclerviewSearchListe
                         }
                         Intent intent=new Intent(getContext(),FetchMarketDataService.class);
                         intent.putExtra(BaseService.EXTRA_SHOULD_IGNORE_WALLET_REFRESH,true);
-                        getContext().startService(intent);
+                        ServiceStarter.start(getContext(), intent);
                     }
                 }
         );

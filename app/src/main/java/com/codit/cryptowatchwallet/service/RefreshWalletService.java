@@ -7,6 +7,7 @@ import com.codit.cryptowatchwallet.manager.SharedPreferenceManager;
 import com.codit.cryptowatchwallet.model.Balance;
 import com.codit.cryptowatchwallet.model.Transaction;
 import com.codit.cryptowatchwallet.model.Wallet;
+import com.codit.cryptowatchwallet.util.ServiceStarter;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
@@ -91,7 +92,7 @@ private void updateNotificationsQueue(HashMap<String,String> notifications)
     Intent intent1=new Intent(getApplicationContext(),UpdateWalletsWorthService.class);
     intent1.putExtra(BaseService.EXTRA_SHOULD_START_NOTIFICATION,shouldStartNotification);
 
-    startService(intent1);
+    ServiceStarter.start(getApplicationContext(), intent1);
 }
 
 

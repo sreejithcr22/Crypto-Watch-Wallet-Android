@@ -25,6 +25,7 @@ import com.codit.cryptowatchwallet.R;
 import com.codit.cryptowatchwallet.model.Wallet;
 import com.codit.cryptowatchwallet.service.AddWalletService;
 import com.codit.cryptowatchwallet.service.BaseService;
+import com.codit.cryptowatchwallet.util.ServiceStarter;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -191,7 +192,7 @@ public class AddWalletActivity extends AppCompatActivity implements View.OnClick
         intent.putExtra(Wallet.EXTRA_WALLET_NAME, nameInput.getText().toString().trim());
         intent.putExtra(Wallet.WALLET_COIN_CODE, getSelectedCoinCode(coinInput.getText().toString()));
         intent.putExtra(Wallet.WALLET_ADDRESS, addressInput.getText().toString().trim());
-        startService(intent);
+        ServiceStarter.start(this, intent);
         isLoading = true;
         loadingDialog.show();
     }

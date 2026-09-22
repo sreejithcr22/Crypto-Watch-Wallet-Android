@@ -20,7 +20,9 @@ import com.codit.cryptowatchwallet.fragment.MarketFragment;
 import com.codit.cryptowatchwallet.fragment.SettingsFragment;
 import com.codit.cryptowatchwallet.fragment.WalletFragment;
 import com.codit.cryptowatchwallet.manager.SharedPreferenceManager;
+import com.codit.cryptowatchwallet.service.FetchMarketDataService;
 import com.codit.cryptowatchwallet.service.UpdateWalletsWorthService;
+import com.codit.cryptowatchwallet.util.ServiceStarter;
 
 import java.util.Arrays;
 
@@ -80,6 +82,10 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
         setSupportActionBar(toolbar);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new WalletFragment(), FRAGMENT_WALLET).commit();
+
+        // Fetch market data now that the app is in the foreground. (App.onCreate's
+        // start may be skipped on Android 12+ if the process started in background.)
+        ServiceStarter.start(this, new Intent(this, FetchMarketDataService.class));
 
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -177,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
                         currency.setTitle(sharedPreferenceManager.getDefaultCurrency());
                         dialogInterface.dismiss();
                         Intent intent = new Intent(MainActivity.this, UpdateWalletsWorthService.class);
-                        startService(intent);
+                        ServiceStarter.start(MainActivity.this, intent);
                         marketFragment = (MarketFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_MARKET);
                         if (marketFragment != null && marketFragment.isVisible()) {
                             marketFragment.refreshList();
