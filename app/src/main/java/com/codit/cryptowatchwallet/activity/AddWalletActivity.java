@@ -26,6 +26,7 @@ import com.codit.cryptowatchwallet.model.Wallet;
 import com.codit.cryptowatchwallet.service.AddWalletService;
 import com.codit.cryptowatchwallet.service.BaseService;
 import com.codit.cryptowatchwallet.util.ServiceStarter;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -35,6 +36,7 @@ import java.util.regex.Pattern;
 public class AddWalletActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText addressInput, coinInput, nameInput;
+    private TextInputLayout nameLayout, coinLayout, addressLayout;
     private androidx.appcompat.widget.Toolbar toolbar;
     private IntentIntegrator qrScan;
     private AppCompatButton copyClip, scanQR;
@@ -62,6 +64,9 @@ public class AddWalletActivity extends AppCompatActivity implements View.OnClick
         addressInput = findViewById(R.id.add_wallet_address_edittext);
         coinInput = findViewById(R.id.add_wallet_coin_edittext);
         nameInput = findViewById(R.id.add_wallet_name_edittext);
+        nameLayout = findViewById(R.id.add_wallet_name_layout);
+        coinLayout = findViewById(R.id.add_wallet_coin_layout);
+        addressLayout = findViewById(R.id.add_wallet_address_layout);
         copyClip = findViewById(R.id.button_copy_clip);
         scanQR = findViewById(R.id.button_scan_qr);
         loadingDialog = new ProgressDialog(AddWalletActivity.this);
@@ -169,17 +174,20 @@ public class AddWalletActivity extends AppCompatActivity implements View.OnClick
         Pattern p = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(addressInput.getText().toString().trim());
 
+        nameLayout.setError(null);
+        coinLayout.setError(null);
+        addressLayout.setError(null);
         if (TextUtils.isEmpty(nameInput.getText().toString().trim())) {
-            nameInput.setError("Please enter a name");
+            nameLayout.setError("Please enter a name");
             return false;
         } else if (TextUtils.isEmpty(coinInput.getText().toString())) {
-            coinInput.setError("Please select a coin");
+            coinLayout.setError("Please select a coin");
             return false;
         } else if (TextUtils.isEmpty(addressInput.getText().toString().trim())) {
-            addressInput.setError("Please enter an address");
+            addressLayout.setError("Please enter an address");
             return false;
         } else if (addressInput.getText().toString().trim().contains(" ")) {
-            addressInput.setError("Address cannot contain whitespaces");
+            addressLayout.setError("Address cannot contain whitespaces");
             return false;
         }
         return true;
