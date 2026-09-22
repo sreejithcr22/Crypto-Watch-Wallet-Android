@@ -94,7 +94,7 @@ public class WalletFragment extends Fragment implements RecyclerviewSearchListen
                 }
         );
 
-        WalletViewModel walletViewModel = ViewModelProviders.of(this).get(WalletViewModel.class);
+        WalletViewModel walletViewModel = new ViewModelProvider(this).get(WalletViewModel.class);
         walletViewModel.getAllWalletsLive().observe(WalletFragment.this, new Observer<List<Wallet>>() {
             @Override
             public void onChanged(@Nullable List<Wallet> wallets) {

@@ -11,7 +11,7 @@ import com.codit.cryptowatchwallet.model.Wallet;
 /**
  * Created by Sreejith on 22-Nov-17.
  */
-@Database(entities = {CoinPrices.class, Wallet.class}, version = 1)
+@Database(entities = {CoinPrices.class, Wallet.class}, version = 1, exportSchema = false)
 
 public abstract class AppDatabase extends RoomDatabase{
 
@@ -20,6 +20,7 @@ public abstract class AppDatabase extends RoomDatabase{
     public static AppDatabase getDatabase(Context context) {
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "app_db")
+                            .fallbackToDestructiveMigration()
                             .build();
         }
         return instance;

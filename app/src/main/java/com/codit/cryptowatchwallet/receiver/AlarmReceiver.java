@@ -5,17 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.codit.cryptowatchwallet.service.BaseService;
-import com.codit.cryptowatchwallet.service.FetchMarketDataService;
-import com.codit.cryptowatchwallet.service.RefreshWalletService;
-import com.codit.cryptowatchwallet.util.ServiceStarter;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+
+import com.codit.cryptowatchwallet.worker.MarketRefreshWorker;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i("wallet", "AlarmReceiver onReceive: ");
-        Intent serviceIntent=new Intent(context.getApplicationContext(),FetchMarketDataService.class);
-        ServiceStarter.start(context.getApplicationContext(), serviceIntent);
+        OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(MarketRefreshWorker.class).build();
+        WorkManager.getInstance(context.getApplicationContext()).enqueue(request);
     }
 }

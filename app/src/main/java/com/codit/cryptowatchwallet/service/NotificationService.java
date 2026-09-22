@@ -9,6 +9,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
 import android.util.Log;
 
+import com.codit.cryptowatchwallet.App;
 import com.codit.cryptowatchwallet.R;
 import com.codit.cryptowatchwallet.activity.WalletDetailsActivity;
 import com.codit.cryptowatchwallet.manager.SharedPreferenceManager;
@@ -84,7 +85,7 @@ SharedPreferenceManager helper;
 
 
             Uri uri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            NotificationCompat.Builder builder=new NotificationCompat.Builder(this);
+            NotificationCompat.Builder builder=new NotificationCompat.Builder(this, App.CHANNEL_ID);
 
             Intent intent1=new Intent(this, WalletDetailsActivity.class);
             intent1.putExtra(Wallet.EXTRA_WALLET_NAME,wallet.getDisplayName());
@@ -99,7 +100,7 @@ SharedPreferenceManager helper;
                 balanceDiff="+"+balanceDiff;
             }
 
-            PendingIntent pendingIntent=stackBuilder.getPendingIntent(id,PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent=stackBuilder.getPendingIntent(id,PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
             builder.setContentIntent(pendingIntent)
                    .setContentText(wallet.getDisplayName()+" ("+balanceDiff+" "+wallet.getCoinCode()+")")
@@ -116,7 +117,10 @@ SharedPreferenceManager helper;
             NotificationManager manager= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         Log.d(TAG, "Notification id= "+String.valueOf(id));
-            manager.notify(id,builder.build());
+            try {
+                manager.notify(id,builder.build());
+            } catch (SecurityException e) {
+                Log.d(TAG, "notification permission revoked, skipping");
             }
     }
 

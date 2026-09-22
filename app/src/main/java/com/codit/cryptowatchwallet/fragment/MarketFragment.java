@@ -95,7 +95,7 @@ public class MarketFragment extends Fragment  implements RecyclerviewSearchListe
         );
 
 
-        MarketViewModel marketViewModel= ViewModelProviders.of(this).get(MarketViewModel.class);
+        MarketViewModel marketViewModel= new ViewModelProvider(this).get(MarketViewModel.class);
         marketViewModel.getAllCoinPrices().observe(MarketFragment.this, new Observer<List<CoinPrices>>() {
             @Override
             public void onChanged(@Nullable List<CoinPrices> updatedPrices) {

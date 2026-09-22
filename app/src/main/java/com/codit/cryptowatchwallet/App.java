@@ -1,13 +1,22 @@
 package com.codit.cryptowatchwallet;
 
 import android.app.Application;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+
 import com.codit.cryptowatchwallet.manager.SharedPreferenceManager;
-import com.codit.cryptowatchwallet.receiver.ScheduleAlarm;
 import com.codit.cryptowatchwallet.service.FetchMarketDataService;
 import com.codit.cryptowatchwallet.util.ServiceStarter;
+import com.codit.cryptowatchwallet.worker.MarketRefreshWorker;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Sreejith on 18-Feb-18.
@@ -15,6 +24,8 @@ import com.codit.cryptowatchwallet.util.ServiceStarter;
 
 public class App extends Application {
     private static final String TAG="app";
+    public static final String CHANNEL_ID = "wallet_alerts";
+    private static final String PERIODIC_WORK = "market-refresh";
     private SharedPreferenceManager sharedPreferenceManager;
 
     @Override
@@ -23,32 +34,36 @@ public class App extends Application {
         Log.d(TAG, "onCreate: ");
 
         sharedPreferenceManager =new SharedPreferenceManager(getApplicationContext());
+        createNotificationChannel();
         initSession();
     }
 
-    private void initSession() {
-        if (sharedPreferenceManager.getSessionCount() == 0) {
-            setUpAlarm();
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID, "Wallet alerts", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            if (manager != null) manager.createNotificationChannel(channel);
         }
+    }
+
+    private void initSession() {
+        setUpPeriodicRefresh();
         sharedPreferenceManager.setSessionCount(sharedPreferenceManager.getSessionCount() + 1);
         Intent intent = new Intent(this, FetchMarketDataService.class);
         ServiceStarter.start(this, intent);
 
-       /* if (!SharedPreferenceManager.SESSION_COUNT_UPDATED) {
-
-            SharedPreferenceManager.SESSION_COUNT_UPDATED = true;
-
-        }*/
         Log.d(TAG, "session count=" + sharedPreferenceManager.getSessionCount());
     }
 
-    private void setUpAlarm() {
+    public static void setUpPeriodicRefresh(Application app) {
+        PeriodicWorkRequest request = new PeriodicWorkRequest.Builder(
+                MarketRefreshWorker.class, 15, TimeUnit.MINUTES).build();
+        WorkManager.getInstance(app).enqueueUniquePeriodicWork(
+                PERIODIC_WORK, ExistingPeriodicWorkPolicy.KEEP, request);
+    }
 
-        /*Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
-        PendingIntent pintent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarm = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-        alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 5*60*1000, pintent);*/
-        Intent intent = new Intent(this, ScheduleAlarm.class);
-        sendBroadcast(intent);
+    private void setUpPeriodicRefresh() {
+        setUpPeriodicRefresh(this);
     }
 }
