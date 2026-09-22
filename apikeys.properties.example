@@ -1,0 +1,4 @@
+# Local secrets - NOT tracked by git (see .gitignore).
+# Copy your CryptoCompare key here as:
+# cryptocompareApiKey=PASTE_KEY_HERE
+cryptocompareApiKey=

@@ -16,7 +16,8 @@ public interface MarketApi {
 
     @GET("data/pricemulti")
     Call<LinkedHashMap<String,HashMap<String,Double> >> getAllCoinPrices(@Query("fsyms") String coinsList,
-                                                                         @Query("tsyms") String currencyList);
+                                                                         @Query("tsyms") String currencyList,
+                                                                         @Query("api_key") String apiKey);
 
 
 }

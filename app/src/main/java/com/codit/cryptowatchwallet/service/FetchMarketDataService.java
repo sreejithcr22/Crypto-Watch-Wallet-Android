@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
+import com.codit.cryptowatchwallet.BuildConfig;
 import com.codit.cryptowatchwallet.R;
 import com.codit.cryptowatchwallet.http.ApiClient;
 import com.codit.cryptowatchwallet.http.MarketApi;
@@ -52,13 +53,21 @@ public class FetchMarketDataService extends IntentService {
         }
     }
 
+    String getApiKeyOrNull()
+    {
+        String apiKey = BuildConfig.CRYPTOCOMPARE_API_KEY;
+        if (apiKey == null || apiKey.trim().isEmpty()) return null; // Retrofit omits null query params
+        return apiKey.trim();
+    }
+
     LinkedHashMap<String, HashMap<String, Double>>  fetchDataFromServer()
     {
         Retrofit retrofit= ApiClient.getInstance().getMarketClient();
         MarketApi marketApi=retrofit.create(MarketApi.class);
 
         Call<LinkedHashMap<String,HashMap<String,Double> >> call=marketApi.getAllCoinPrices(UrlBuilder.buildCoinList(),
-                UrlBuilder.buildCurrencyList(getApplicationContext().getResources().getStringArray(R.array.currencies)));
+                UrlBuilder.buildCurrencyList(getApplicationContext().getResources().getStringArray(R.array.currencies)),
+                getApiKeyOrNull());
         try {
 
             Response<LinkedHashMap<String, HashMap<String, Double>>> response=call.execute();
@@ -67,10 +76,11 @@ public class FetchMarketDataService extends IntentService {
                 return response.body();
             }
             else {
-
+                Log.d("wallet", "fetch market data failed: code=" + response.code());
                 return null;
             }
         } catch (Exception e) {
+            Log.d("wallet", "fetch market data exception: " + e);
             e.printStackTrace();
             return null;
         }

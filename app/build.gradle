@@ -1,5 +1,12 @@
 apply plugin: 'com.android.application'
 
+def apiKeysFile = rootProject.file("apikeys.properties")
+def apiKeys = new Properties()
+if (apiKeysFile.exists()) {
+    apiKeysFile.withInputStream { apiKeys.load(it) }
+}
+def cryptoCompareApiKey = apiKeys.getProperty("cryptocompareApiKey", "")
+
 android {
     compileSdkVersion 26
     defaultConfig {
@@ -10,6 +17,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        buildConfigField "String", "CRYPTOCOMPARE_API_KEY", "\"${cryptoCompareApiKey}\""
     }
     buildTypes {
         release {

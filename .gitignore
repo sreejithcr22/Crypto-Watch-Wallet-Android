@@ -1,0 +1,11 @@
+# Local SDK location
+local.properties
+# API keys (never commit - see apikeys.properties.example)
+apikeys.properties
+# Gradle / build outputs
+.gradle/
+build/
+app/build/
+# Android Studio
+*.iml
+.idea/
