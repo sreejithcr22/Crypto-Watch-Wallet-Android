@@ -19,3 +19,16 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# --- Gson: API DTOs are parsed via reflection. Keep the models and
+# their SerializedName annotations so minified release builds
+# parse network responses correctly.
+-keepattributes Signature, InnerClasses, EnclosingMethod
+-keepattributes RuntimeVisibleAnnotations, AnnotationDefault
+-keep class com.codit.cryptowatchwallet.model.** { *; }
+-keepclassmembers,allowshrinking,allowobfuscation class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
+# Gson's own reflective helpers.
+-keep class com.google.gson.** { *; }
+-dontwarn com.google.gson.**
