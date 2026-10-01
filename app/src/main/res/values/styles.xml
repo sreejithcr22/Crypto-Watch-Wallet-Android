@@ -1,7 +1,7 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <!-- Base application theme. Compose single-activity, no ActionBar. -->
+    <style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -10,9 +10,6 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
 
         <item name="android:textColorHint">@android:color/darker_gray</item>
-        <item name="colorControlNormal">@android:color/darker_gray</item>
-        <item name="colorControlActivated">@color/colorPrimaryDark</item>
-        <item name="colorControlHighlight">@color/colorPrimaryDark</item>
         <item name="android:fontFamily">@font/quicksand_regular</item>
 
     </style>
