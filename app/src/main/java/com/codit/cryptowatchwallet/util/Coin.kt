@@ -43,7 +43,6 @@ object Coin {
         "BCN" to "Bytecoin",
         "PPT" to "Populous",
         "STRAT" to "Stratis",
-        "RHOC" to "RChain",
         "SC" to "Siacoin",
         "WAVES" to "Waves",
         "SNT" to "Status",
@@ -57,7 +56,6 @@ object Coin {
         "REP" to "Augur",
         "DGD" to "DigixDAO",
         "ARDR" to "Ardor",
-        "HSR" to "Hshare",
         "ETN" to "Electroneum",
         "KMD" to "Komodo",
         "GAS" to "Gas",
@@ -100,6 +98,27 @@ object Coin {
             coinWorth.substringBefore(" ").toDouble()
         } catch (_: Exception) {
             0.0
+        }
+    }
+
+    /**
+     * Formats any displayed amount to exactly 2 decimal points.
+     * Non-numeric values (e.g. "-", "Not available") are returned unchanged.
+     */
+    fun formatTwoDecimals(value: String?): String {
+        if (value == null) return PRICE_NOT_AVAILABLE
+        return try {
+            BigDecimal(value).setScale(2, RoundingMode.HALF_EVEN).toPlainString()
+        } catch (_: Exception) {
+            value
+        }
+    }
+
+    fun formatTwoDecimals(value: Double): String {
+        return try {
+            BigDecimal(value.toString()).setScale(2, RoundingMode.HALF_EVEN).toPlainString()
+        } catch (_: Exception) {
+            value.toString()
         }
     }
 

@@ -78,7 +78,7 @@ fun MarketScreen(
 @Composable
 private fun MarketRow(prices: CoinPrices, currency: String) {
     val price = prices.prices[currency]
-    val priceText = if (price == null) Coin.PRICE_NOT_AVAILABLE else "$currency $price"
+    val priceText = if (price == null) Coin.PRICE_NOT_AVAILABLE else "$currency ${Coin.formatTwoDecimals(price)}"
     Card(
         modifier = Modifier
             .fillMaxWidth()

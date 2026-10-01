@@ -89,10 +89,10 @@ fun WalletDetailsScreen(
                 )
                 Spacer(Modifier.height(8.dp))
                 DetailCard("Worth", w.coinWorth)
-                DetailCard("Balance", w.balance?.coinBalance ?: "-")
-                DetailCard("Unconfirmed balance", w.balance?.unconfirmedBalance ?: "-")
-                DetailCard("Total sent", w.balance?.totalSent ?: "-")
-                DetailCard("Total received", w.balance?.totalReceived ?: "-")
+                DetailCard("Balance", Coin.formatTwoDecimals(w.balance?.coinBalance ?: "-"))
+                DetailCard("Unconfirmed balance", Coin.formatTwoDecimals(w.balance?.unconfirmedBalance ?: "-"))
+                DetailCard("Total sent", Coin.formatTwoDecimals(w.balance?.totalSent ?: "-"))
+                DetailCard("Total received", Coin.formatTwoDecimals(w.balance?.totalReceived ?: "-"))
                 DetailCard(
                     "Transactions",
                     w.balance?.transactionCount?.takeIf { it != -1L }?.toString() ?: "-"

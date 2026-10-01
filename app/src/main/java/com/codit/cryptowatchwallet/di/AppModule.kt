@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.codit.cryptowatchwallet.data.local.AppDatabase
 import com.codit.cryptowatchwallet.data.local.MarketDao
 import com.codit.cryptowatchwallet.data.local.WalletDao
+import com.codit.cryptowatchwallet.data.remote.CoinGeckoApi
 import com.codit.cryptowatchwallet.data.remote.MarketApi
 import com.codit.cryptowatchwallet.data.remote.WalletApi
 import dagger.Module
@@ -24,7 +25,9 @@ import javax.inject.Singleton
 object AppModule {
 
     private const val BASE_URL_BLOCKCYPHER = "https://api.blockcypher.com/v1/"
+    // Same endpoints as Crypto-Converter-Android (NetworkModule).
     private const val BASE_URL_MARKET = "https://min-api.cryptocompare.com/"
+    private const val BASE_URL_COINGECKO = "https://api.coingecko.com/api/v3/"
 
     @Provides
     @Singleton
@@ -63,6 +66,21 @@ object AppModule {
     @Singleton
     fun provideMarketApi(@Named("market") retrofit: Retrofit): MarketApi =
         retrofit.create(MarketApi::class.java)
+
+    @Provides
+    @Singleton
+    @Named("coingecko")
+    fun provideCoinGeckoRetrofit(okHttpClient: OkHttpClient): Retrofit =
+        Retrofit.Builder()
+            .baseUrl(BASE_URL_COINGECKO)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+    @Provides
+    @Singleton
+    fun provideCoinGeckoApi(@Named("coingecko") retrofit: Retrofit): CoinGeckoApi =
+        retrofit.create(CoinGeckoApi::class.java)
 
     @Provides
     @Singleton

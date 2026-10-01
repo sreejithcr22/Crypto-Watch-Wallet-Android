@@ -111,7 +111,7 @@ private fun WalletRow(wallet: Wallet, onClick: () -> Unit) {
                 style = MaterialTheme.typography.bodySmall
             )
             Text(
-                "${wallet.balance?.coinBalance ?: "0"} ${wallet.coinCode}",
+                "${Coin.formatTwoDecimals(wallet.balance?.coinBalance ?: "0")} ${wallet.coinCode}",
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(
