@@ -15,6 +15,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -44,9 +45,10 @@ class WalletRepository @Inject constructor(
         private const val BASE_URL_BLOCKCYPHER = "https://api.blockcypher.com/v1/"
     }
 
-    fun observeWallets(): Flow<List<Wallet>> = walletDao.observeWallets()
+    // A database error must never take the UI down: emit an empty list instead.
+    fun observeWallets(): Flow<List<Wallet>> = walletDao.observeWallets().catch { emit(emptyList()) }
 
-    fun observeWallet(name: String): Flow<Wallet?> = walletDao.observeWalletByName(name)
+    fun observeWallet(name: String): Flow<Wallet?> = walletDao.observeWalletByName(name).catch { emit(null) }
 
     suspend fun getWalletByName(name: String): Wallet? = walletDao.getWalletByName(name)
 

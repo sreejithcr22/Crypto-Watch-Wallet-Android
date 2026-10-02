@@ -1,6 +1,7 @@
 package com.codit.cryptowatchwallet.di
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Room
 import com.codit.cryptowatchwallet.data.local.AppDatabase
 import com.codit.cryptowatchwallet.data.local.MarketDao
@@ -84,8 +85,38 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext context: Context): AppDatabase =
-        Room.databaseBuilder(context, AppDatabase::class.java, "app_db")
+    fun provideDatabase(@ApplicationContext context: Context): AppDatabase = openDatabase(context)
+
+    /**
+     * Opens [AppDatabase.NAME], repairing it if needed.
+     *
+     * Room only falls back to a destructive migration when the schema *version* changes.
+     * A database left behind by an older release whose schema differs without a version
+     * bump (see [AppDatabase]) makes Room throw from the very first query and take the
+     * whole app down on launch, so the file is opened eagerly here and, if it cannot be
+     * opened/repaired at all, it is deleted and recreated. As a last resort an in-memory
+     * database is used so a broken file can never stop the app from starting.
+     */
+    private fun openDatabase(context: Context): AppDatabase {
+        return try {
+            buildDatabase(context).also { it.openHelper.writableDatabase }
+        } catch (t: Throwable) {
+            Log.w("app", "Unusable database, recreating it", t)
+            try {
+                context.deleteDatabase(AppDatabase.NAME)
+                buildDatabase(context).also { it.openHelper.writableDatabase }
+            } catch (t2: Throwable) {
+                Log.e("app", "Database unusable, falling back to in-memory storage", t2)
+                Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
+                    .allowMainThreadQueries()
+                    .build()
+            }
+        }
+    }
+
+    private fun buildDatabase(context: Context): AppDatabase =
+        Room.databaseBuilder(context, AppDatabase::class.java, AppDatabase.NAME)
+            .addMigrations(*AppDatabase.MIGRATIONS)
             .fallbackToDestructiveMigration()
             .build()
 

@@ -14,6 +14,7 @@ import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -38,7 +39,7 @@ class MarketRepository @Inject constructor(
 
     private val gson = Gson()
 
-    fun observeCoinPrices(): Flow<List<CoinPrices>> = marketDao.observeCoinPrices()
+    fun observeCoinPrices(): Flow<List<CoinPrices>> = marketDao.observeCoinPrices().catch { emit(emptyList()) }
 
     suspend fun getCoinRate(coinCode: String, currency: String): Double? {
         return try {

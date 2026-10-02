@@ -11,6 +11,7 @@ keystore/
 .gradle/
 build/
 app/build/
+.kotlin/
 # Android Studio
 *.iml
 .idea/
