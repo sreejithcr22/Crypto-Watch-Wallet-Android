@@ -17,6 +17,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.withTimeoutOrNull
 import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -44,6 +45,13 @@ class WalletRepository @Inject constructor(
         const val SUCCESS_ADDED = "Wallet added successfully"
         const val ERROR_DUPLICATE_NAME = "Wallet name already exists"
         private const val BASE_URL_BLOCKCYPHER = "https://api.blockcypher.com/v1/"
+        /**
+         * Upper bound for the best-effort market refresh after insert. The
+         * wallet is already persisted at that point, so a slow or queued
+         * refresh (mutex contention, 60s network timeouts) must never delay
+         * the Success result and leave the UI spinning.
+         */
+        const val POST_INSERT_REFRESH_TIMEOUT_MS = 25_000L
     }
 
     // A database error must never take the UI down: emit an empty list instead.
@@ -158,9 +166,13 @@ class WalletRepository @Inject constructor(
                 Coin.PRICE_NOT_AVAILABLE
             }
             walletDao.addNewWallet(Wallet(name, coinCode, address, balance, worth))
-            // Kick off a market refresh + revaluation so the new wallet shows correct fiat value.
+            // Best-effort market refresh + revaluation so the new wallet shows
+            // a correct fiat value. Time-bounded: the wallet is already saved,
+            // so a hung/queued refresh must not delay the Success result.
             try {
-                marketRepository.refreshMarket()
+                withTimeoutOrNull(POST_INSERT_REFRESH_TIMEOUT_MS) {
+                    marketRepository.refreshMarket()
+                }
             } catch (_: Throwable) {
             }
             try {
