@@ -23,7 +23,7 @@ class NotificationHelper @Inject constructor(
 ) {
     fun showWalletNotification(wallet: Wallet, transaction: Transaction, notificationId: Int) {
         val title = "${transaction.tnxCount} new transactions !"
-        var balanceDiff = Coin.formatTwoDecimals(transaction.balanceDiff ?: "0")
+        var balanceDiff = Coin.formatCoinAmount(transaction.balanceDiff ?: "0")
         if (!balanceDiff.contains("-")) balanceDiff = "+$balanceDiff"
 
         val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)

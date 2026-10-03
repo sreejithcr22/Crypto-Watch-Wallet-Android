@@ -61,27 +61,32 @@ fun MainScreen(
         Tab(Routes.SETTINGS, "Settings", Icons.Default.Settings)
     )
 
-    val title = when {
-        currentRoute?.startsWith("wallet_details") == true -> "Details"
-        currentRoute == Routes.ADD_WALLET -> "Add wallet"
-        currentRoute == Routes.MARKET -> "Market"
-        currentRoute == Routes.SETTINGS -> "Settings"
+    val title = when (currentRoute) {
+        Routes.MARKET -> "Market"
+        Routes.SETTINGS -> "Settings"
         else -> "Wallets"
     }
-    val showBottomBar = currentRoute in listOf(Routes.WALLETS, Routes.MARKET, Routes.SETTINGS)
+    val isTopLevel = currentRoute in listOf(Routes.WALLETS, Routes.MARKET, Routes.SETTINGS)
+    val showBottomBar = isTopLevel
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(title) },
-                actions = {
-                    if (currentRoute in listOf(Routes.WALLETS, Routes.MARKET)) {
-                        TextButton(onClick = { showCurrency = true }) {
-                            Text(currency)
+            // Sub-screens (Add wallet, Details) own their TopAppBar with back
+            // navigation, so only show the shared bar for top-level tabs.
+            // This keeps a single title + single back button and leaves the
+            // system status bar visible.
+            if (isTopLevel) {
+                TopAppBar(
+                    title = { Text(title) },
+                    actions = {
+                        if (currentRoute in listOf(Routes.WALLETS, Routes.MARKET)) {
+                            TextButton(onClick = { showCurrency = true }) {
+                                Text(currency)
+                            }
                         }
                     }
-                }
-            )
+                )
+            }
         },
         bottomBar = {
             if (showBottomBar) {

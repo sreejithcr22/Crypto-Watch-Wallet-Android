@@ -102,8 +102,35 @@ object Coin {
     }
 
     /**
-     * Formats any displayed amount to exactly 2 decimal points.
+     * Coin balances: show full precision as stored (up to 8-18 decimals),
+     * without forcing 2 decimals. Trailing zeros are trimmed for readability.
      * Non-numeric values (e.g. "-", "Not available") are returned unchanged.
+     */
+    fun formatCoinAmount(value: String?): String {
+        if (value == null) return PRICE_NOT_AVAILABLE
+        if (value.isBlank() || value == "-" || value == PRICE_NOT_AVAILABLE) return value
+        return try {
+            BigDecimal(value).stripTrailingZeros().toPlainString()
+        } catch (_: Exception) {
+            value
+        }
+    }
+
+    /**
+     * Market prices: full precision (small coins need 6-8 decimals).
+     * Fiat worth ([calculateCoinWorth]) intentionally stays at 2 decimals.
+     */
+    fun formatMarketPrice(value: Double): String {
+        return try {
+            BigDecimal(value.toString()).stripTrailingZeros().toPlainString()
+        } catch (_: Exception) {
+            value.toString()
+        }
+    }
+
+    /**
+     * Legacy 2-decimal formatter, kept for fiat-only contexts.
+     * Do not use for coin balances or market prices.
      */
     fun formatTwoDecimals(value: String?): String {
         if (value == null) return PRICE_NOT_AVAILABLE
