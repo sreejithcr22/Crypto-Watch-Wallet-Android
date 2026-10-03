@@ -1,0 +1,1 @@
+Modernized wallet, market and details screens with full-precision balances, reliable first-launch price loading, and a hang-free add-wallet flow.
