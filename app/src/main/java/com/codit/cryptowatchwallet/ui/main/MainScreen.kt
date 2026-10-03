@@ -152,7 +152,11 @@ fun MainScreen(
 
     if (showCurrency) {
         val currencies = remember {
-            context.resources.getStringArray(R.array.currencies).sorted()
+            try {
+                context.resources.getStringArray(R.array.currencies).sorted()
+            } catch (_: Throwable) {
+                listOf("USD")
+            }
         }
         androidx.compose.material3.AlertDialog(
             onDismissRequest = { showCurrency = false },

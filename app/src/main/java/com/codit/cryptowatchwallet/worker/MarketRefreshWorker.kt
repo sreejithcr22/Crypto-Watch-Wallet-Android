@@ -24,14 +24,27 @@ class MarketRefreshWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         return try {
-            walletRepository.refreshWalletsAndWorth(refreshBalances = false)
+            try {
+                walletRepository.refreshWalletsAndWorth(refreshBalances = false)
+            } catch (_: Throwable) {
+            }
             // Lightweight tick: market + worth only (balances refreshed on foreground pull).
             // For full balance refresh in background, flip to true (adds API load + delays).
-            walletRepository.drainNotifications()
+            try {
+                walletRepository.drainNotifications()
+            } catch (_: Throwable) {
+            }
             Result.success()
-        } catch (e: Exception) {
-            Log.d(TAG, "MarketRefreshWorker failed: $e")
-            Result.retry()
+        } catch (e: Throwable) {
+            try {
+                Log.d(TAG, "MarketRefreshWorker failed: $e")
+            } catch (_: Throwable) {
+            }
+            try {
+                Result.retry()
+            } catch (_: Throwable) {
+                Result.failure()
+            }
         }
     }
 

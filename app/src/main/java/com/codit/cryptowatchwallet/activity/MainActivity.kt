@@ -21,18 +21,34 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT >= 33) {
-            val granted = ContextCompat.checkSelfPermission(
-                this, Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED
-            if (!granted) {
-                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        try {
+            if (Build.VERSION.SDK_INT >= 33) {
+                val granted = try {
+                    ContextCompat.checkSelfPermission(
+                        this, Manifest.permission.POST_NOTIFICATIONS
+                    ) == PackageManager.PERMISSION_GRANTED
+                } catch (_: Throwable) {
+                    true
+                }
+                if (!granted) {
+                    try {
+                        notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    } catch (_: Throwable) {
+                    }
+                }
             }
+        } catch (_: Throwable) {
         }
-        setContent {
-            CryptoWatchTheme {
-                MainScreen()
+        try {
+            setContent {
+                CryptoWatchTheme {
+                    MainScreen()
+                }
             }
+        } catch (t: Throwable) {
+            // Last-resort: never show a black crash. Finish gracefully.
+            android.util.Log.e("app", "MainActivity setContent failed", t)
+            finish()
         }
     }
 }

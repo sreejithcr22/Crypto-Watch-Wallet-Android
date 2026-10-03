@@ -29,27 +29,53 @@ class CryptoWatchApp : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
-        Log.d(TAG, "onCreate")
-        createNotificationChannel()
-        settingsRepository.incrementSessionCount()
-        setUpPeriodicRefresh()
+        // Launch must never die from a startup side-effect (corrupt prefs,
+        // WorkManager re-init, notification channel). Each step is isolated
+        // so one failure cannot take the whole app down.
+        try {
+            Log.d(TAG, "onCreate")
+        } catch (_: Throwable) {
+        }
+        try {
+            createNotificationChannel()
+        } catch (t: Throwable) {
+            Log.w(TAG, "notification channel failed", t)
+        }
+        try {
+            settingsRepository.incrementSessionCount()
+        } catch (t: Throwable) {
+            Log.w(TAG, "session count failed", t)
+        }
+        try {
+            setUpPeriodicRefresh()
+        } catch (t: Throwable) {
+            Log.w(TAG, "periodic refresh scheduling failed", t)
+        }
     }
 
     private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                CHANNEL_ID, "Wallet alerts", NotificationManager.IMPORTANCE_DEFAULT
-            )
-            val manager = getSystemService(NotificationManager::class.java)
-            manager?.createNotificationChannel(channel)
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val channel = NotificationChannel(
+                    CHANNEL_ID, "Wallet alerts", NotificationManager.IMPORTANCE_DEFAULT
+                )
+                val manager = getSystemService(NotificationManager::class.java)
+                manager?.createNotificationChannel(channel)
+            }
+        } catch (t: Throwable) {
+            Log.w(TAG, "createNotificationChannel failed", t)
         }
     }
 
     private fun setUpPeriodicRefresh() {
-        val request = PeriodicWorkRequestBuilder<MarketRefreshWorker>(15, TimeUnit.MINUTES).build()
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-            PERIODIC_WORK, ExistingPeriodicWorkPolicy.KEEP, request
-        )
+        try {
+            val request = PeriodicWorkRequestBuilder<MarketRefreshWorker>(15, TimeUnit.MINUTES).build()
+            WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                PERIODIC_WORK, ExistingPeriodicWorkPolicy.KEEP, request
+            )
+        } catch (t: Throwable) {
+            Log.w(TAG, "setUpPeriodicRefresh failed", t)
+        }
     }
 
     companion object {

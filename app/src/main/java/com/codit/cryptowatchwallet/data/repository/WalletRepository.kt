@@ -16,6 +16,7 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOf
 import java.math.BigDecimal
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -46,62 +47,111 @@ class WalletRepository @Inject constructor(
     }
 
     // A database error must never take the UI down: emit an empty list instead.
-    fun observeWallets(): Flow<List<Wallet>> = walletDao.observeWallets().catch { emit(emptyList()) }
+    // The outer try/catch also covers a synchronous throw while Room builds
+    // the Flow (`.catch` only handles failures during collection).
+    fun observeWallets(): Flow<List<Wallet>> = try {
+        walletDao.observeWallets().catch { emit(emptyList()) }
+    } catch (_: Throwable) {
+        flowOf(emptyList())
+    }
 
-    fun observeWallet(name: String): Flow<Wallet?> = walletDao.observeWalletByName(name).catch { emit(null) }
+    fun observeWallet(name: String): Flow<Wallet?> = try {
+        walletDao.observeWalletByName(name).catch { emit(null) }
+    } catch (_: Throwable) {
+        flowOf(null)
+    }
 
-    suspend fun getWalletByName(name: String): Wallet? = walletDao.getWalletByName(name)
+    suspend fun getWalletByName(name: String): Wallet? = try {
+        walletDao.getWalletByName(name)
+    } catch (_: Throwable) {
+        null
+    }
 
     suspend fun deleteWallet(wallet: Wallet): Boolean {
         return try {
             walletDao.deleteWallet(wallet) > 0
-        } catch (_: Exception) {
+        } catch (_: Throwable) {
             false
         }
     }
 
     suspend fun refreshWalletsAndWorth(refreshBalances: Boolean = true): Boolean {
-        val marketOk = marketRepository.refreshMarket()
-        if (refreshBalances) {
-            refreshBalancesFromNetwork()
+        return try {
+            val marketOk = try {
+                marketRepository.refreshMarket()
+            } catch (_: Throwable) {
+                false
+            }
+            if (refreshBalances) {
+                try {
+                    refreshBalancesFromNetwork()
+                } catch (_: Throwable) {
+                }
+            }
+            try {
+                updateAllWalletsWorth(settingsRepository.getDefaultCurrency())
+            } catch (_: Throwable) {
+            }
+            marketOk
+        } catch (_: Throwable) {
+            false
         }
-        updateAllWalletsWorth(settingsRepository.getDefaultCurrency())
-        return marketOk
     }
 
     suspend fun updateAllWalletsWorth(currencyCode: String) {
         try {
-            val wallets = walletDao.getAllWallets()
+            val wallets = try {
+                walletDao.getAllWallets()
+            } catch (_: Throwable) {
+                return
+            }
             if (wallets.isEmpty()) return
             wallets.forEach { wallet ->
-                val rate = marketDao.getCoinPricesFor(wallet.coinCode)?.prices?.get(currencyCode)
-                val worth = if (rate != null && wallet.balance != null) {
-                    Coin.calculateCoinWorth(wallet.balance!!.coinBalance, rate, currencyCode)
+                val rate = try {
+                    marketDao.getCoinPricesFor(wallet.coinCode)?.prices?.get(currencyCode)
+                } catch (_: Throwable) {
+                    null
+                }
+                val balance = wallet.balance?.coinBalance
+                val worth = if (rate != null && balance != null) {
+                    Coin.calculateCoinWorth(balance, rate, currencyCode)
                 } else {
                     Coin.PRICE_NOT_AVAILABLE
                 }
                 wallet.coinWorth = worth
             }
-            walletDao.updateWallets(wallets)
-        } catch (e: Exception) {
+            try {
+                walletDao.updateWallets(wallets)
+            } catch (e: Throwable) {
+                Log.d("wallet", "updateAllWalletsWorth failed: $e")
+            }
+        } catch (e: Throwable) {
             Log.d("wallet", "updateAllWalletsWorth failed: $e")
         }
     }
 
     suspend fun addWallet(name: String, coinCode: String, address: String): AddWalletResult {
         // Duplicate checks
-        if (walletDao.checkIfNameDuplicate(name) != null) {
-            return AddWalletResult.Error(ERROR_DUPLICATE_NAME)
-        }
-        walletDao.checkIfAddressDuplicate(address)?.let {
-            return AddWalletResult.Error("Address already exists with wallet: ${it.displayName}")
+        try {
+            if (walletDao.checkIfNameDuplicate(name) != null) {
+                return AddWalletResult.Error(ERROR_DUPLICATE_NAME)
+            }
+            walletDao.checkIfAddressDuplicate(address)?.let {
+                return AddWalletResult.Error("Address already exists with wallet: ${it.displayName}")
+            }
+        } catch (_: Throwable) {
+            return AddWalletResult.Error(ERROR_UNKNOWN)
         }
 
         val balance = fetchBalance(coinCode, address)
             ?: return AddWalletResult.Error(mapError())
 
         return try {
-            val rate = marketDao.getCoinPricesFor(coinCode)?.prices?.get(Currency.USD)
+            val rate = try {
+                marketDao.getCoinPricesFor(coinCode)?.prices?.get(Currency.USD)
+            } catch (_: Throwable) {
+                null
+            }
             val worth = if (rate != null) {
                 Coin.calculateCoinWorth(balance.coinBalance, rate, Currency.USD)
             } else {
@@ -109,16 +159,26 @@ class WalletRepository @Inject constructor(
             }
             walletDao.addNewWallet(Wallet(name, coinCode, address, balance, worth))
             // Kick off a market refresh + revaluation so the new wallet shows correct fiat value.
-            marketRepository.refreshMarket()
-            updateAllWalletsWorth(settingsRepository.getDefaultCurrency())
+            try {
+                marketRepository.refreshMarket()
+            } catch (_: Throwable) {
+            }
+            try {
+                updateAllWalletsWorth(settingsRepository.getDefaultCurrency())
+            } catch (_: Throwable) {
+            }
             AddWalletResult.Success
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             AddWalletResult.Error(ERROR_UNKNOWN)
         }
     }
 
     private fun mapError(): String {
-        return if (!connectivity.isConnected()) ERROR_NO_INTERNET else ERROR_UNKNOWN
+        return try {
+            if (!connectivity.isConnected()) ERROR_NO_INTERNET else ERROR_UNKNOWN
+        } catch (_: Throwable) {
+            ERROR_UNKNOWN
+        }
     }
 
     suspend fun fetchBalance(coinCode: String, address: String): Balance? {
@@ -128,29 +188,68 @@ class WalletRepository @Inject constructor(
                     coinCode == Coin.LTC || coinCode == Coin.DASH ||
                     coinCode.equals(Coin.DOGE, ignoreCase = true) -> {
                     val url = BASE_URL_BLOCKCYPHER + coinCode.lowercase() + "/main/addrs/" + address + "/balance"
-                    val response = walletApi.getCypherAddressBalance(url)
-                    if (response.isSuccessful && response.body() != null) {
-                        response.body()!!.getWalletBalance(coinCode)
+                    val response = try {
+                        walletApi.getCypherAddressBalance(url)
+                    } catch (_: Throwable) {
+                        return null
+                    }
+                    val body = try {
+                        response.body()
+                    } catch (_: Throwable) {
+                        null
+                    }
+                    if (response.isSuccessful && body != null) {
+                        try {
+                            body.getWalletBalance(coinCode)
+                        } catch (_: Throwable) {
+                            null
+                        }
                     } else {
-                        Log.d("wallet", "fetchBalance failed: code=${response.code()}")
+                        Log.d("wallet", "fetchBalance failed: code=${try { response.code() } catch (_: Throwable) { -1 }}")
                         null
                     }
                 }
                 coinCode == Coin.BCH -> {
-                    val response = walletApi.getBCHAddressBalance("https://blockdozer.com/insight-api/addr/$address")
-                    if (response.isSuccessful && response.body() != null) {
-                        response.body()!!.getWalletBalance(coinCode)
+                    val response = try {
+                        walletApi.getBCHAddressBalance("https://blockdozer.com/insight-api/addr/$address")
+                    } catch (_: Throwable) {
+                        return null
+                    }
+                    val body = try {
+                        response.body()
+                    } catch (_: Throwable) {
+                        null
+                    }
+                    if (response.isSuccessful && body != null) {
+                        try {
+                            body.getWalletBalance(coinCode)
+                        } catch (_: Throwable) {
+                            null
+                        }
                     } else null
                 }
                 coinCode == Coin.XRP -> {
-                    val response = walletApi.getRippleBalance("https://data.ripple.com/v2/accounts/$address/balances")
-                    if (response.isSuccessful && response.body() != null) {
-                        response.body()!!.getWalletBalance(coinCode)
+                    val response = try {
+                        walletApi.getRippleBalance("https://data.ripple.com/v2/accounts/$address/balances")
+                    } catch (_: Throwable) {
+                        return null
+                    }
+                    val body = try {
+                        response.body()
+                    } catch (_: Throwable) {
+                        null
+                    }
+                    if (response.isSuccessful && body != null) {
+                        try {
+                            body.getWalletBalance(coinCode)
+                        } catch (_: Throwable) {
+                            null
+                        }
                     } else null
                 }
                 else -> null
             }
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.d("wallet", "fetchBalance exception: ${e.message}")
             null
         }
@@ -159,52 +258,108 @@ class WalletRepository @Inject constructor(
     private suspend fun refreshBalancesFromNetwork() {
         val wallets = try {
             walletDao.getAllWallets()
-        } catch (_: Exception) {
+        } catch (_: Throwable) {
             return
         }
         if (wallets.isEmpty()) return
         val updated = mutableListOf<Wallet>()
         val notifications = mutableMapOf<String, String>()
-        val gson = Gson()
+        val gson = try {
+            Gson()
+        } catch (_: Throwable) {
+            return
+        }
         for (wallet in wallets) {
-            val newBalance = fetchBalance(wallet.coinCode, wallet.walletAddress)
-            if (newBalance != null && wallet.balance != null) {
-                val tx = checkForNewTx(wallet.balance!!, newBalance)
-                if (tx.tnxCount > 0) {
-                    wallet.balance = newBalance
-                    updated.add(wallet)
+            val oldBalance = wallet.balance ?: continue
+            val newBalance = try {
+                fetchBalance(wallet.coinCode, wallet.walletAddress)
+            } catch (_: Throwable) {
+                null
+            } ?: continue
+            val tx = try {
+                checkForNewTx(oldBalance, newBalance)
+            } catch (_: Throwable) {
+                continue
+            }
+            if (tx.tnxCount > 0) {
+                wallet.balance = newBalance
+                updated.add(wallet)
+                try {
                     notifications[wallet.displayName] = gson.toJson(tx)
+                } catch (_: Throwable) {
                 }
             }
             // Be nice to rate-limited free APIs.
-            delay(3000)
+            try {
+                delay(3000)
+            } catch (_: Throwable) {
+            }
         }
         if (updated.isNotEmpty()) {
-            walletDao.updateWallets(updated)
-            settingsRepository.updateNotificationQ(Gson().toJson(notifications))
-            drainNotifications()
+            try {
+                walletDao.updateWallets(updated)
+            } catch (_: Throwable) {
+                return
+            }
+            try {
+                settingsRepository.updateNotificationQ(Gson().toJson(notifications))
+            } catch (_: Throwable) {
+            }
+            try {
+                drainNotifications()
+            } catch (_: Throwable) {
+            }
         }
     }
 
     suspend fun drainNotifications() {
-        val json = settingsRepository.getNotificationQ() ?: return
+        val json = try {
+            settingsRepository.getNotificationQ() ?: return
+        } catch (_: Throwable) {
+            return
+        }
         try {
             val type = object : TypeToken<HashMap<String, String>>() {}.type
-            val queue: HashMap<String, String> = Gson().fromJson(json, type) ?: return
+            val queue: HashMap<String, String> = try {
+                Gson().fromJson(json, type) ?: return
+            } catch (_: Throwable) {
+                try {
+                    settingsRepository.updateNotificationQ(null)
+                } catch (_: Throwable) {
+                }
+                return
+            }
             if (queue.isEmpty()) return
             for ((name, txJson) in queue) {
-                val tx = Gson().fromJson(txJson, Transaction::class.java)
-                val wallet = walletDao.getWalletByName(name)
-                if (wallet != null && tx != null) {
-                    notificationHelper.showWalletNotification(
-                        wallet,
-                        tx,
-                        settingsRepository.generateUniqueId()
-                    )
+                try {
+                    val tx = try {
+                        Gson().fromJson(txJson, Transaction::class.java)
+                    } catch (_: Throwable) {
+                        null
+                    }
+                    val wallet = try {
+                        walletDao.getWalletByName(name)
+                    } catch (_: Throwable) {
+                        null
+                    }
+                    if (wallet != null && tx != null) {
+                        try {
+                            notificationHelper.showWalletNotification(
+                                wallet,
+                                tx,
+                                settingsRepository.generateUniqueId()
+                            )
+                        } catch (_: Throwable) {
+                        }
+                    }
+                } catch (_: Throwable) {
                 }
             }
-            settingsRepository.updateNotificationQ(null)
-        } catch (e: Exception) {
+            try {
+                settingsRepository.updateNotificationQ(null)
+            } catch (_: Throwable) {
+            }
+        } catch (e: Throwable) {
             Log.d("wallet", "drainNotifications failed: $e")
         }
     }
@@ -220,7 +375,7 @@ class WalletRepository @Inject constructor(
             } else {
                 Transaction(0, null)
             }
-        } catch (_: Exception) {
+        } catch (_: Throwable) {
             Transaction(0, null)
         }
     }

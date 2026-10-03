@@ -43,7 +43,11 @@ fun SettingsScreen(
     var showCredits by remember { mutableStateOf(false) }
 
     val currencies = remember {
-        context.resources.getStringArray(R.array.currencies).sorted()
+        try {
+            context.resources.getStringArray(R.array.currencies).sorted()
+        } catch (_: Throwable) {
+            listOf("USD")
+        }
     }
 
     Column(
@@ -103,12 +107,16 @@ fun SettingsScreen(
 
     if (showDonate) {
         val addresses = remember {
-            linkedMapOf(
-                "Bitcoin" to context.getString(R.string.bitcoin_address),
-                "Litecoin" to context.getString(R.string.lite_address),
-                "Ripple" to context.getString(R.string.ripple_address),
-                "Ethereum" to context.getString(R.string.eth_address)
-            )
+            try {
+                linkedMapOf(
+                    "Bitcoin" to context.getString(R.string.bitcoin_address),
+                    "Litecoin" to context.getString(R.string.lite_address),
+                    "Ripple" to context.getString(R.string.ripple_address),
+                    "Ethereum" to context.getString(R.string.eth_address)
+                )
+            } catch (_: Throwable) {
+                linkedMapOf<String, String>()
+            }
         }
         AlertDialog(
             onDismissRequest = { showDonate = false },

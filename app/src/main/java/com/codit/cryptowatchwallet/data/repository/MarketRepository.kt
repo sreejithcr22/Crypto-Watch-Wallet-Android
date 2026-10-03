@@ -39,12 +39,16 @@ class MarketRepository @Inject constructor(
 
     private val gson = Gson()
 
-    fun observeCoinPrices(): Flow<List<CoinPrices>> = marketDao.observeCoinPrices().catch { emit(emptyList()) }
+    fun observeCoinPrices(): Flow<List<CoinPrices>> = try {
+        marketDao.observeCoinPrices().catch { emit(emptyList()) }
+    } catch (_: Throwable) {
+        kotlinx.coroutines.flow.flowOf(emptyList())
+    }
 
     suspend fun getCoinRate(coinCode: String, currency: String): Double? {
         return try {
             marketDao.getCoinPricesFor(coinCode)?.prices?.get(currency)
-        } catch (_: Exception) {
+        } catch (_: Throwable) {
             null
         }
     }
@@ -55,20 +59,46 @@ class MarketRepository @Inject constructor(
      */
     suspend fun refreshMarket(): Boolean {
         return try {
-            val cryptoCodes = Coin.coinsData.keys.toList()
-            val fiatCodes = context.resources.getStringArray(R.array.currencies).toList()
-            val apiKey = BuildConfig.CRYPTOCOMPARE_API_KEY.trim().ifEmpty { null }
+            val cryptoCodes = try {
+                Coin.coinsData.keys.toList()
+            } catch (_: Throwable) {
+                emptyList()
+            }
+            val fiatCodes = try {
+                context.resources.getStringArray(R.array.currencies).toList()
+            } catch (_: Throwable) {
+                listOf("USD")
+            }
+            if (cryptoCodes.isEmpty() || fiatCodes.isEmpty()) return false
+            val apiKey = try {
+                BuildConfig.CRYPTOCOMPARE_API_KEY.trim().ifEmpty { null }
+            } catch (_: Throwable) {
+                null
+            }
 
-            val matrix = fetchCoinGeckoMatrix(cryptoCodes, fiatCodes)
-                .ifEmpty { fetchCryptoCompareMatrix(cryptoCodes, fiatCodes, apiKey) }
+            val matrix = try {
+                fetchCoinGeckoMatrix(cryptoCodes, fiatCodes)
+            } catch (_: Throwable) {
+                LinkedHashMap()
+            }.ifEmpty {
+                try {
+                    fetchCryptoCompareMatrix(cryptoCodes, fiatCodes, apiKey)
+                } catch (_: Throwable) {
+                    LinkedHashMap()
+                }
+            }
             if (matrix.isEmpty()) {
                 Log.d(TAG, "refreshMarket: no prices returned")
                 return false
             }
-            marketDao.addCoinPrices(matrix.map { (code, prices) -> CoinPrices(code, prices) })
+            try {
+                marketDao.addCoinPrices(matrix.map { (code, prices) -> CoinPrices(code, prices) })
+            } catch (_: Throwable) {
+                return false
+            }
             Log.d(TAG, "refreshMarket: loaded ${matrix.size} coins")
             true
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.d(TAG, "refreshMarket exception: $e")
             false
         }
@@ -81,52 +111,90 @@ class MarketRepository @Inject constructor(
     ): LinkedHashMap<String, HashMap<String, Double>> {
         val result = LinkedHashMap<String, HashMap<String, Double>>()
         if (cryptoCodes.isEmpty()) return result
-        val cryptoSet = cryptoCodes.toHashSet()
+        val cryptoSet = try {
+            cryptoCodes.toHashSet()
+        } catch (_: Throwable) {
+            return result
+        }
 
         val vsToOriginal = LinkedHashMap<String, String>()
         for (fiat in fiatCodes) {
-            vsCodeFor(fiat)?.let { vsToOriginal[it] = fiat }
+            try {
+                vsCodeFor(fiat)?.let { vsToOriginal[it] = fiat }
+            } catch (_: Throwable) {
+            }
         }
-        val vsCurrencies = ArrayList(vsToOriginal.keys)
+        val vsCurrencies = try {
+            ArrayList(vsToOriginal.keys)
+        } catch (_: Throwable) {
+            return result
+        }
         if (!vsCurrencies.contains("btc")) vsCurrencies.add("btc")
-        val vsParam = vsCurrencies.joinToString(",")
+        val vsParam = try {
+            vsCurrencies.joinToString(",")
+        } catch (_: Throwable) {
+            return result
+        }
 
-        val lower = cryptoCodes.map { it.lowercase() }
-        val chunks = lower.chunked(COINGECKO_SYMBOLS_PER_CALL)
+        val lower = try {
+            cryptoCodes.map { it.lowercase() }
+        } catch (_: Throwable) {
+            return result
+        }
+        val chunks = try {
+            lower.chunked(COINGECKO_SYMBOLS_PER_CALL)
+        } catch (_: Throwable) {
+            return result
+        }
         for (chunk in chunks) {
             try {
                 val resp = coinGeckoApi.getPrices(chunk.joinToString(","), vsParam)
                 for ((key, prices) in resp) {
-                    val sym = key.uppercase()
+                    val sym = try {
+                        key.uppercase()
+                    } catch (_: Throwable) {
+                        continue
+                    }
                     if (!cryptoSet.contains(sym)) continue
                     val map = result.getOrPut(sym) { HashMap() }
                     for ((priceKey, value) in prices) {
-                        if (value <= 0) continue
-                        val k = priceKey.lowercase()
-                        if (k == "btc") {
-                            map["BTC"] = value
-                        } else {
-                            val original = vsToOriginal[k] ?: continue
-                            map[original] = value
+                        try {
+                            if (value <= 0) continue
+                            val k = priceKey.lowercase()
+                            if (k == "btc") {
+                                map["BTC"] = value
+                            } else {
+                                val original = vsToOriginal[k] ?: continue
+                                map[original] = value
+                            }
+                        } catch (_: Throwable) {
                         }
                     }
                 }
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 Log.d(TAG, "CoinGecko chunk failed: $e")
             }
         }
 
         // FX derivation for fiats simple/price doesn't quote (e.g. ZMW).
         try {
-            val ratesResp = coinGeckoApi.getExchangeRates()
-            val rates = ratesResp.body()?.asJsonObject?.getAsJsonObject("rates")
+            val ratesResp = try {
+                coinGeckoApi.getExchangeRates()
+            } catch (_: Throwable) {
+                return result
+            }
+            val rates = try {
+                ratesResp.body()?.asJsonObject?.getAsJsonObject("rates")
+            } catch (_: Throwable) {
+                null
+            }
             if (ratesResp.isSuccessful && rates != null) {
                 val rateByCode = HashMap<String, Double>()
                 for ((code, entry) in rates.entrySet()) {
                     try {
                         val v = entry.asJsonObject.get("value").asDouble
                         if (v > 0) rateByCode[code.lowercase()] = v
-                    } catch (_: Exception) {
+                    } catch (_: Throwable) {
                     }
                 }
                 val usdRate = rateByCode["usd"] ?: 0.0
@@ -136,13 +204,17 @@ class MarketRepository @Inject constructor(
                         if (usd <= 0) continue
                         for (fiat in fiatCodes) {
                             if (map.containsKey(fiat)) continue
-                            val r = rateByCode[fiat.lowercase()] ?: continue
+                            val r = try {
+                                rateByCode[fiat.lowercase()]
+                            } catch (_: Throwable) {
+                                null
+                            } ?: continue
                             if (r > 0) map[fiat] = usd * (r / usdRate)
                         }
                     }
                 }
             }
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.d(TAG, "CoinGecko exchange_rates failed: $e")
         }
         return result
@@ -173,16 +245,27 @@ class MarketRepository @Inject constructor(
 
         for ((fsys, tsyms) in batches) {
             try {
-                val response = marketApi.getAllCoinPrices(fsys, tsyms, apiKey)
-                if (!response.isSuccessful) {
-                    Log.d(TAG, "CryptoCompare batch failed: code=${response.code()}")
+                val response = try {
+                    marketApi.getAllCoinPrices(fsys, tsyms, apiKey)
+                } catch (_: Throwable) {
                     continue
                 }
-                val parsed = parseBodyOrNull(response.body()) ?: continue
-                for ((code, prices) in parsed) {
-                    result.getOrPut(code) { HashMap() }.putAll(prices)
+                if (!response.isSuccessful) {
+                    Log.d(TAG, "CryptoCompare batch failed: code=${try { response.code() } catch (_: Throwable) { -1 }}")
+                    continue
                 }
-            } catch (e: Exception) {
+                val parsed = try {
+                    parseBodyOrNull(response.body())
+                } catch (_: Throwable) {
+                    null
+                } ?: continue
+                for ((code, prices) in parsed) {
+                    try {
+                        result.getOrPut(code) { HashMap() }.putAll(prices)
+                    } catch (_: Throwable) {
+                    }
+                }
+            } catch (e: Throwable) {
                 Log.d(TAG, "CryptoCompare batch failed: $e")
             }
         }
@@ -190,26 +273,38 @@ class MarketRepository @Inject constructor(
     }
 
     private fun vsCodeFor(fiatCode: String): String? {
-        if (fiatCode == "RUR") return "rub"
-        return fiatCode.lowercase()
+        return try {
+            if (fiatCode == "RUR") return "rub"
+            fiatCode.lowercase()
+        } catch (_: Throwable) {
+            null
+        }
     }
 
     private fun parseBodyOrNull(body: JsonElement?): LinkedHashMap<String, HashMap<String, Double>>? {
-        if (body == null || body.isJsonNull) return null
+        if (body == null || try { body.isJsonNull } catch (_: Throwable) { true }) return null
         return try {
             if (body.isJsonObject && body.asJsonObject.has("Response")) {
-                val status = body.asJsonObject.get("Response").asString
+                val status = try {
+                    body.asJsonObject.get("Response").asString
+                } catch (_: Throwable) {
+                    null
+                }
                 if (status.equals("Error", ignoreCase = true)) {
-                    val msg = if (body.asJsonObject.has("Message")) {
-                        body.asJsonObject.get("Message").asString
-                    } else "unknown error"
+                    val msg = try {
+                        if (body.asJsonObject.has("Message")) {
+                            body.asJsonObject.get("Message").asString
+                        } else "unknown error"
+                    } catch (_: Throwable) {
+                        "unknown error"
+                    }
                     Log.d(TAG, "CryptoCompare API error: $msg")
                     return null
                 }
             }
             val type = object : TypeToken<LinkedHashMap<String, HashMap<String, Double>>>() {}.type
             gson.fromJson(body, type)
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.d(TAG, "parseBodyOrNull failed: $e")
             null
         }
