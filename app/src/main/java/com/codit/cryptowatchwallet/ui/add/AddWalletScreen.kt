@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
@@ -27,8 +26,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -55,7 +52,6 @@ fun AddWalletScreen(
     val context = LocalContext.current
     val snackbar = remember { SnackbarHostState() }
     var showCoinPicker by remember { mutableStateOf(false) }
-    var showBackConfirm by remember { mutableStateOf(false) }
 
     val coinOptions = remember {
         context.resources.getStringArray(R.array.add_wallet_spinner_items).toList()
@@ -83,18 +79,6 @@ fun AddWalletScreen(
     }
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Add wallet") },
-                navigationIcon = {
-                    TextButton(onClick = { showBackConfirm = true }) { Text("Back") }
-                },
-                actions = {
-                    TextButton(onClick = { viewModel.clear() }) { Text("Clear") }
-                    TextButton(onClick = { viewModel.submit() }) { Text("Save") }
-                }
-            )
-        },
         snackbarHost = { SnackbarHost(snackbar) }
     ) { padding ->
         Column(
@@ -200,21 +184,5 @@ fun AddWalletScreen(
                 }
             }
         }
-    }
-
-    if (showBackConfirm) {
-        AlertDialog(
-            onDismissRequest = { showBackConfirm = false },
-            confirmButton = {
-                TextButton(onClick = {
-                    showBackConfirm = false
-                    onBack()
-                }) { Text("BACK") }
-            },
-            dismissButton = {
-                TextButton(onClick = { showBackConfirm = false }) { Text("CANCEL") }
-            },
-            text = { Text("Are you sure you want to go back?") }
-        )
     }
 }
