@@ -1,0 +1,7 @@
+Monitor the balance, transactions, and wallet worth and more of your paper wallet or any public crypto currency address right on your phone and get push notifications whenever there is a new transaction.
+
+Supports Bitcoin (BTC) , Bitcoin Cash (BCH) , Ethereum (ETH) , Ripple (XRP) , Litecoin (LTC), Dash (DASH), Dogecoin and Zcash. Simply select a coin and type in an address to add a wallet and monitor details like wallet balance net worth, Unconfirmed balance, number of transactions and unconfirmed transactions, total sent and received etc.
+
+See the wallet balance in more than 25 currencies including USD, EUR, GBP , INR, JPY, KRW etc.
+
+Also comes with live coin prices of more than 100 crypto currencies.
