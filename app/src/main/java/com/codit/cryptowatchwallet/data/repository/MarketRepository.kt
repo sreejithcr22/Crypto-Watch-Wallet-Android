@@ -15,6 +15,8 @@ import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -39,6 +41,13 @@ class MarketRepository @Inject constructor(
 
     private val gson = Gson()
 
+    /**
+     * Serializes refreshes: on cold start the periodic worker and the Market
+     * screen can fire at the same moment, and concurrent CoinGecko bursts get
+     * rate-limited (429) so every caller fails. Queued callers reuse one fetch.
+     */
+    private val refreshMutex = Mutex()
+
     fun observeCoinPrices(): Flow<List<CoinPrices>> = try {
         marketDao.observeCoinPrices().catch { emit(emptyList()) }
     } catch (_: Throwable) {
@@ -56,8 +65,13 @@ class MarketRepository @Inject constructor(
     /**
      * Fetches latest market prices and persists them.
      * Returns true on success, false otherwise (never throws for network errors).
+     * Concurrent callers are queued on [refreshMutex] instead of stampeding the API.
      */
-    suspend fun refreshMarket(): Boolean {
+    suspend fun refreshMarket(): Boolean = refreshMutex.withLock {
+        refreshMarketLocked()
+    }
+
+    private suspend fun refreshMarketLocked(): Boolean {
         return try {
             val cryptoCodes = try {
                 Coin.coinsData.keys.toList()
